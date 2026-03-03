@@ -1,27 +1,28 @@
 import { NavLink, useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
-import { LayoutDashboard, Package, Warehouse, ShoppingBag, LogOut, Wine } from "lucide-react";
+import { useAdminAuth } from "@/context/AdminAuthContext";
+import { LayoutDashboard, Package, Warehouse, ShoppingBag, LogOut, Wine, ArrowLeft } from "lucide-react";
 
 const navItems = [
-    { to: "/", icon: LayoutDashboard, label: "Dashboard" },
-    { to: "/products", icon: Package, label: "Products" },
-    { to: "/inventory", icon: Warehouse, label: "Inventory" },
-    { to: "/orders", icon: ShoppingBag, label: "Orders" },
+    { to: "/admin", icon: LayoutDashboard, label: "Dashboard" },
+    { to: "/admin/products", icon: Package, label: "Products" },
+    { to: "/admin/inventory", icon: Warehouse, label: "Inventory" },
+    { to: "/admin/orders", icon: ShoppingBag, label: "Orders" },
 ];
 
-export default function Layout({ children }: { children: React.ReactNode }) {
-    const { user, logout } = useAuth();
+export default function AdminLayout({ children }: { children: React.ReactNode }) {
+    const { user, logout } = useAdminAuth();
     const navigate = useNavigate();
-    const handleLogout = () => { logout(); navigate("/login"); };
+
+    const handleLogout = () => { logout(); navigate("/admin/login"); };
 
     return (
-        <div className="flex h-screen bg-[#0a0a0a] overflow-hidden">
+        <div className="flex h-screen bg-[#0a0a0a] overflow-hidden fixed inset-0 z-50">
             {/* Sidebar */}
             <aside className="w-60 flex-shrink-0 bg-[#111] border-r border-white/5 flex flex-col">
-                <div className="px-6 py-6 border-b border-white/5">
+                <div className="px-6 py-5 border-b border-white/5">
                     <div className="flex items-center gap-2">
-                        <Wine size={20} className="text-[#8b1a1a]" />
-                        <span className="font-serif font-bold text-white text-lg tracking-wide">RESERVE</span>
+                        <Wine size={18} className="text-[#8b1a1a]" />
+                        <span className="font-serif font-bold text-white text-base tracking-wide">RESERVE</span>
                     </div>
                     <p className="text-[10px] uppercase tracking-widest text-gray-600 mt-0.5">Admin Console</p>
                 </div>
@@ -30,7 +31,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                         <NavLink
                             key={to}
                             to={to}
-                            end={to === "/"}
+                            end={to === "/admin"}
                             className={({ isActive }) =>
                                 `flex items-center gap-3 px-3 py-2.5 rounded-md text-sm transition-colors ${isActive
                                     ? "bg-[#8b1a1a]/20 text-[#c0392b] font-medium"
@@ -43,9 +44,15 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                         </NavLink>
                     ))}
                 </nav>
-                <div className="px-4 py-4 border-t border-white/5">
-                    <div className="flex items-center gap-3 mb-3 px-1">
-                        <div className="w-8 h-8 rounded-full bg-[#8b1a1a]/30 flex items-center justify-center text-xs font-bold text-[#c0392b] uppercase">
+                <div className="px-4 py-4 border-t border-white/5 space-y-1">
+                    <button
+                        onClick={() => navigate("/")}
+                        className="w-full flex items-center gap-2 px-3 py-2 rounded-md text-sm text-gray-500 hover:text-gray-300 hover:bg-white/5 transition-colors"
+                    >
+                        <ArrowLeft size={14} /> Back to Store
+                    </button>
+                    <div className="flex items-center gap-3 px-1 py-2">
+                        <div className="w-7 h-7 rounded-full bg-[#8b1a1a]/30 flex items-center justify-center text-xs font-bold text-[#c0392b] uppercase">
                             {user?.first_name?.[0]}{user?.last_name?.[0]}
                         </div>
                         <div className="overflow-hidden">
@@ -63,7 +70,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             </aside>
 
             {/* Main */}
-            <main className="flex-1 overflow-auto">
+            <main className="flex-1 overflow-auto bg-[#0a0a0a]">
                 <div className="p-8">{children}</div>
             </main>
         </div>

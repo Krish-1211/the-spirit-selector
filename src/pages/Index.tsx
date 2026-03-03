@@ -40,9 +40,7 @@ const Index = () => {
             © 2026 Reserve Premium Spirits. All Rights Reserved.
           </p>
           <a
-            href="http://localhost:3000"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="/admin"
             className="mt-6 inline-block text-[10px] uppercase tracking-widest text-muted-foreground/30 hover:text-muted-foreground transition-colors"
           >
             Staff Admin Panel

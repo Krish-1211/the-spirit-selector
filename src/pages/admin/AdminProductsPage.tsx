@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import api from "../lib/api";
+import api from "@/lib/adminApi";
 import { Plus, Pencil, Trash2, ToggleLeft, ToggleRight, X } from "lucide-react";
 
 const CATEGORIES = ["Whiskey", "Wine", "Vodka", "Beer", "Tequila", "Rum", "Gin", "Other"];

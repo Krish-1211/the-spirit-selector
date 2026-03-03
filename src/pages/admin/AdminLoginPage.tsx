@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { useAdminAuth } from "@/context/AdminAuthContext";
 
-export default function LoginPage() {
-    const { login } = useAuth();
+export default function AdminLoginPage() {
+    const { login } = useAdminAuth();
     const navigate = useNavigate();
     const [email, setEmail] = useState("admin@reservespirits.com");
     const [password, setPassword] = useState("");
@@ -16,9 +16,9 @@ export default function LoginPage() {
         setLoading(true);
         try {
             await login(email, password);
-            navigate("/");
+            navigate("/admin");
         } catch (err: any) {
-            setError(err.response?.data?.error || "Login failed. Please check your credentials.");
+            setError(err.response?.data?.error || "Invalid credentials. Please try again.");
         } finally {
             setLoading(false);
         }
@@ -32,27 +32,22 @@ export default function LoginPage() {
                     <p className="text-xs uppercase tracking-widest text-gray-500 mt-1">Admin Panel</p>
                 </div>
                 <form onSubmit={handleSubmit} className="bg-[#111] border border-white/10 rounded-lg p-8 space-y-5 shadow-2xl">
-                    <div>
-                        <label className="block text-xs uppercase tracking-widest text-gray-400 mb-2">Email</label>
-                        <input
-                            type="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            className="w-full bg-[#1a1a1a] border border-white/10 rounded-md px-4 py-3 text-white text-sm focus:outline-none focus:border-[#8b1a1a] transition-colors"
-                            required
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-xs uppercase tracking-widest text-gray-400 mb-2">Password</label>
-                        <input
-                            type="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            className="w-full bg-[#1a1a1a] border border-white/10 rounded-md px-4 py-3 text-white text-sm focus:outline-none focus:border-[#8b1a1a] transition-colors"
-                            placeholder="••••••••"
-                            required
-                        />
-                    </div>
+                    {[
+                        { label: "Email", value: email, onChange: setEmail, type: "email" },
+                        { label: "Password", value: password, onChange: setPassword, type: "password", placeholder: "••••••••" },
+                    ].map(({ label, value, onChange, type, placeholder }) => (
+                        <div key={label}>
+                            <label className="block text-xs uppercase tracking-widest text-gray-400 mb-2">{label}</label>
+                            <input
+                                type={type}
+                                value={value}
+                                onChange={(e) => onChange(e.target.value)}
+                                placeholder={placeholder}
+                                required
+                                className="w-full bg-[#1a1a1a] border border-white/10 rounded-md px-4 py-3 text-white text-sm focus:outline-none focus:border-[#8b1a1a] transition-colors"
+                            />
+                        </div>
+                    ))}
                     {error && <p className="text-red-400 text-sm">{error}</p>}
                     <button
                         type="submit"
@@ -61,9 +56,7 @@ export default function LoginPage() {
                     >
                         {loading ? "Signing In..." : "Sign In"}
                     </button>
-                    <p className="text-center text-xs text-gray-600 mt-4">
-                        Default: admin@reservespirits.com / Admin1234!
-                    </p>
+                    <p className="text-center text-xs text-gray-600">admin@reservespirits.com / Admin1234!</p>
                 </form>
             </div>
         </div>
