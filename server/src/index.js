@@ -19,7 +19,14 @@ app.use(cors({
     origin: (origin, callback) => {
         // Allow requests with no origin (curl, Postman, server-to-server)
         if (!origin) return callback(null, true);
+
+        // Always allow Render domains automatically so manual config isn't needed
+        if (origin.endsWith(".onrender.com") || origin.endsWith(".vercel.app")) {
+            return callback(null, true);
+        }
+
         if (allowedOrigins.includes(origin)) return callback(null, true);
+
         callback(new Error(`CORS: origin ${origin} not allowed`));
     },
     credentials: true,
