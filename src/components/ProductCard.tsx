@@ -1,28 +1,30 @@
 import { Link } from "react-router-dom";
-import { Product } from "@/data/products";
-import { useStore } from "@/context/StoreContext";
+import { DBProduct } from "@/lib/api";
 import { useCart } from "@/context/CartContext";
 
 interface Props {
-  product: Product;
+  product: DBProduct;
 }
 
 export default function ProductCard({ product }: Props) {
-  const { selectedStore } = useStore();
   const { addItem } = useCart();
-
-  const inventory = selectedStore ? product.storeInventory[selectedStore.id] : null;
-  const status = inventory?.status ?? "Out of Stock";
+  const price = parseFloat(product.price);
 
   return (
     <div className="group flex flex-col rounded-sm border border-border bg-card transition-colors hover:border-primary/30">
       <Link to={`/product/${product.id}`} className="relative aspect-[4/5] overflow-hidden">
-        <img
-          src={product.image}
-          alt={product.name}
-          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-          loading="lazy"
-        />
+        {product.image_url ? (
+          <img
+            src={product.image_url}
+            alt={product.name}
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            loading="lazy"
+          />
+        ) : (
+          <div className="h-full w-full bg-card flex items-center justify-center text-muted-foreground text-xs uppercase tracking-widest">
+            {product.category}
+          </div>
+        )}
       </Link>
       <div className="flex flex-1 flex-col p-4">
         <p className="mb-1 text-[10px] uppercase tracking-widest text-muted-foreground">{product.brand}</p>
@@ -32,30 +34,18 @@ export default function ProductCard({ product }: Props) {
           </h3>
         </Link>
         <div className="mb-3 flex items-center gap-3 text-xs text-muted-foreground">
-          <span>{product.abv}% ABV</span>
-          <span className="h-3 w-px bg-border" />
-          <span>{product.volume}</span>
+          {product.alcohol_percentage && <span>{product.alcohol_percentage}% ABV</span>}
+          {product.alcohol_percentage && product.volume_ml && <span className="h-3 w-px bg-border" />}
+          {product.volume_ml && <span>{product.volume_ml >= 1000 ? `${product.volume_ml / 1000}L` : `${product.volume_ml}ml`}</span>}
         </div>
         <div className="mt-auto flex items-center justify-between">
-          <span className="font-sans text-lg font-bold text-foreground">${product.price.toFixed(2)}</span>
-          <span
-            className={`text-xs font-medium ${
-              status === "In Stock"
-                ? "text-green-500"
-                : status === "Low Stock"
-                ? "text-yellow-500"
-                : "text-muted-foreground"
-            }`}
-          >
-            {status}
-          </span>
+          <span className="font-sans text-lg font-bold text-foreground">${price.toFixed(2)}</span>
         </div>
         <button
-          onClick={() => addItem(product)}
-          disabled={status === "Out of Stock"}
-          className="mt-3 w-full rounded-sm bg-primary py-2.5 text-xs font-semibold uppercase tracking-wider text-primary-foreground transition-colors hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-40"
+          onClick={() => addItem(product as any)}
+          className="mt-3 w-full rounded-sm bg-primary py-2.5 text-xs font-semibold uppercase tracking-wider text-primary-foreground transition-colors hover:bg-primary/90"
         >
-          {status === "Out of Stock" ? "Unavailable" : "Add to Cart"}
+          Add to Cart
         </button>
       </div>
     </div>

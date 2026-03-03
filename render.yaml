@@ -1,0 +1,60 @@
+services:
+  # ── 1. Backend API (Node.js Web Service) ─────────────────────────────────────
+  - type: web
+    name: reserve-spirits-api
+    runtime: node
+    rootDir: server
+    buildCommand: npm install
+    startCommand: node src/index.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: DATABASE_URL
+        sync: false          # paste your Supabase connection string in Render dashboard
+      - key: JWT_SECRET
+        generateValue: true  # Render auto-generates a secure random value
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: TAX_RATE
+        value: "0.10"
+      - key: FRONTEND_URLS
+        sync: false          # paste comma-separated Render frontend URLs after deploy
+
+  # ── 2. Customer Storefront (Static Site) ─────────────────────────────────────
+  - type: web
+    name: reserve-spirits-store
+    runtime: static
+    rootDir: .
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_URL
+        sync: false          # paste your API service URL, e.g. https://reserve-spirits-api.onrender.com
+    headers:
+      - path: /*
+        name: Cache-Control
+        value: public, max-age=31536000, immutable
+      - path: /index.html
+        name: Cache-Control
+        value: no-cache
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+
+  # ── 3. Admin Panel (Static Site) ─────────────────────────────────────────────
+  - type: web
+    name: reserve-spirits-admin
+    runtime: static
+    rootDir: admin
+    buildCommand: npm install --legacy-peer-deps && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_URL
+        sync: false          # same API URL as above
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html

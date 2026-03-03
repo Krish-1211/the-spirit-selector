@@ -1,5 +1,3 @@
-import { categories, brands } from "@/data/products";
-
 interface Filters {
   category: string;
   brand: string;
@@ -9,9 +7,11 @@ interface Filters {
 interface Props {
   filters: Filters;
   onChange: (filters: Filters) => void;
+  brands?: string[];
+  categories?: string[];
 }
 
-export default function FilterSidebar({ filters, onChange }: Props) {
+export default function FilterSidebar({ filters, onChange, brands = [], categories = [] }: Props) {
   return (
     <aside className="space-y-8">
       {/* Category */}
@@ -20,9 +20,8 @@ export default function FilterSidebar({ filters, onChange }: Props) {
         <div className="space-y-2">
           <button
             onClick={() => onChange({ ...filters, category: "" })}
-            className={`block w-full text-left text-sm transition-colors ${
-              !filters.category ? "font-semibold text-primary" : "text-muted-foreground hover:text-foreground"
-            }`}
+            className={`block w-full text-left text-sm transition-colors ${!filters.category ? "font-semibold text-primary" : "text-muted-foreground hover:text-foreground"
+              }`}
           >
             All Categories
           </button>
@@ -30,9 +29,8 @@ export default function FilterSidebar({ filters, onChange }: Props) {
             <button
               key={cat}
               onClick={() => onChange({ ...filters, category: cat })}
-              className={`block w-full text-left text-sm transition-colors ${
-                filters.category === cat ? "font-semibold text-primary" : "text-muted-foreground hover:text-foreground"
-              }`}
+              className={`block w-full text-left text-sm transition-colors ${filters.category === cat ? "font-semibold text-primary" : "text-muted-foreground hover:text-foreground"
+                }`}
             >
               {cat}
             </button>
@@ -46,9 +44,8 @@ export default function FilterSidebar({ filters, onChange }: Props) {
         <div className="space-y-2">
           <button
             onClick={() => onChange({ ...filters, brand: "" })}
-            className={`block w-full text-left text-sm transition-colors ${
-              !filters.brand ? "font-semibold text-primary" : "text-muted-foreground hover:text-foreground"
-            }`}
+            className={`block w-full text-left text-sm transition-colors ${!filters.brand ? "font-semibold text-primary" : "text-muted-foreground hover:text-foreground"
+              }`}
           >
             All Brands
           </button>
@@ -56,9 +53,8 @@ export default function FilterSidebar({ filters, onChange }: Props) {
             <button
               key={b}
               onClick={() => onChange({ ...filters, brand: b })}
-              className={`block w-full text-left text-sm transition-colors ${
-                filters.brand === b ? "font-semibold text-primary" : "text-muted-foreground hover:text-foreground"
-              }`}
+              className={`block w-full text-left text-sm transition-colors ${filters.brand === b ? "font-semibold text-primary" : "text-muted-foreground hover:text-foreground"
+                }`}
             >
               {b}
             </button>
@@ -80,11 +76,10 @@ export default function FilterSidebar({ filters, onChange }: Props) {
             <button
               key={label}
               onClick={() => onChange({ ...filters, priceRange: [min, max] })}
-              className={`block w-full text-left text-sm transition-colors ${
-                filters.priceRange[0] === min && filters.priceRange[1] === max
+              className={`block w-full text-left text-sm transition-colors ${filters.priceRange[0] === min && filters.priceRange[1] === max
                   ? "font-semibold text-primary"
                   : "text-muted-foreground hover:text-foreground"
-              }`}
+                }`}
             >
               {label}
             </button>

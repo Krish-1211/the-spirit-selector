@@ -1,14 +1,17 @@
 import { createContext, useContext, useState, ReactNode } from "react";
-import { Product } from "@/data/products";
+import { DBProduct } from "@/lib/api";
+
+// Allow any product-like object (handles both DBProduct and legacy shape)
+type AnyProduct = DBProduct & Record<string, any>;
 
 export interface CartItem {
-  product: Product;
+  product: AnyProduct;
   quantity: number;
 }
 
 interface CartContextType {
   items: CartItem[];
-  addItem: (product: Product) => void;
+  addItem: (product: AnyProduct) => void;
   removeItem: (productId: string) => void;
   updateQuantity: (productId: string, quantity: number) => void;
   clearCart: () => void;
@@ -21,7 +24,7 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
 
-  const addItem = (product: Product) => {
+  const addItem = (product: AnyProduct) => {
     setItems((prev) => {
       const existing = prev.find((i) => i.product.id === product.id);
       if (existing) return prev.map((i) => (i.product.id === product.id ? { ...i, quantity: i.quantity + 1 } : i));
@@ -38,7 +41,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const clearCart = () => setItems([]);
   const totalItems = items.reduce((sum, i) => sum + i.quantity, 0);
-  const subtotal = items.reduce((sum, i) => sum + i.product.price * i.quantity, 0);
+  const subtotal = items.reduce((sum, i) => sum + parseFloat(String(i.product.price)) * i.quantity, 0);
 
   return (
     <CartContext.Provider value={{ items, addItem, removeItem, updateQuantity, clearCart, totalItems, subtotal }}>

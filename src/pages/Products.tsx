@@ -1,10 +1,10 @@
-import { useState, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
-import { products } from "@/data/products";
+import { api, DBProduct } from "@/lib/api";
 import { useStore } from "@/context/StoreContext";
 import ProductCard from "@/components/ProductCard";
 import FilterSidebar from "@/components/FilterSidebar";
-import { SlidersHorizontal, X } from "lucide-react";
+import { SlidersHorizontal, X, Loader2 } from "lucide-react";
 
 export default function Products() {
   const { selectedStore } = useStore();
@@ -12,6 +12,8 @@ export default function Products() {
   const categoryParam = searchParams.get("category") || "";
   const searchParam = searchParams.get("search") || "";
 
+  const [allProducts, setAllProducts] = useState<DBProduct[]>([]);
+  const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({
     category: categoryParam,
     brand: "",
@@ -19,20 +21,36 @@ export default function Products() {
   });
   const [showMobileFilters, setShowMobileFilters] = useState(false);
 
-  // Sync category from URL on first render
-  useState(() => {
+  // Sync category from URL
+  useEffect(() => {
     if (categoryParam) setFilters((f) => ({ ...f, category: categoryParam }));
-  });
+  }, [categoryParam]);
+
+  // Fetch products from API
+  useEffect(() => {
+    setLoading(true);
+    const params = new URLSearchParams();
+    if (selectedStore?.id) params.set("store_id", selectedStore.id);
+    api.get<DBProduct[]>(`/products?${params}`)
+      .then(setAllProducts)
+      .catch(console.error)
+      .finally(() => setLoading(false));
+  }, [selectedStore?.id]);
 
   const filtered = useMemo(() => {
-    return products.filter((p) => {
+    return allProducts.filter((p) => {
+      const price = parseFloat(p.price);
       if (filters.category && p.category !== filters.category) return false;
       if (filters.brand && p.brand !== filters.brand) return false;
-      if (p.price < filters.priceRange[0] || p.price > filters.priceRange[1]) return false;
+      if (price < filters.priceRange[0] || price > filters.priceRange[1]) return false;
       if (searchParam && !p.name.toLowerCase().includes(searchParam.toLowerCase()) && !p.brand.toLowerCase().includes(searchParam.toLowerCase())) return false;
       return true;
     });
-  }, [filters, searchParam]);
+  }, [allProducts, filters, searchParam]);
+
+  // Derive unique brands/categories from live data for FilterSidebar
+  const brands = [...new Set(allProducts.map((p) => p.brand))];
+  const categories = [...new Set(allProducts.map((p) => p.category))];
 
   return (
     <main className="min-h-screen">
@@ -63,7 +81,7 @@ export default function Products() {
         <div className="flex gap-10">
           {/* Sidebar - desktop */}
           <div className="hidden w-52 flex-shrink-0 lg:block">
-            <FilterSidebar filters={filters} onChange={setFilters} />
+            <FilterSidebar filters={filters} onChange={setFilters} brands={brands} categories={categories} />
           </div>
 
           {/* Mobile filters */}
@@ -75,13 +93,22 @@ export default function Products() {
                   <X className="h-5 w-5 text-muted-foreground" />
                 </button>
               </div>
-              <FilterSidebar filters={filters} onChange={(f) => { setFilters(f); setShowMobileFilters(false); }} />
+              <FilterSidebar
+                filters={filters}
+                onChange={(f) => { setFilters(f); setShowMobileFilters(false); }}
+                brands={brands}
+                categories={categories}
+              />
             </div>
           )}
 
           {/* Product grid */}
           <div className="flex-1">
-            {filtered.length === 0 ? (
+            {loading ? (
+              <div className="flex items-center justify-center py-32">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              </div>
+            ) : filtered.length === 0 ? (
               <p className="py-20 text-center text-muted-foreground">No products found matching your criteria.</p>
             ) : (
               <div className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-4 md:gap-6">
