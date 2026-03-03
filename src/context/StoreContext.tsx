@@ -15,7 +15,7 @@ const StoreContext = createContext<StoreContextType | undefined>(undefined);
 export function StoreProvider({ children }: { children: ReactNode }) {
   const [selectedStore, setSelectedStore] = useState<Store | null>(null);
   const [fulfillment, setFulfillment] = useState<"pickup" | "delivery">("pickup");
-  const [showStoreModal, setShowStoreModal] = useState(true);
+  const [showStoreModal, setShowStoreModal] = useState(false);
 
   return (
     <StoreContext.Provider
