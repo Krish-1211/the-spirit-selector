@@ -1,13 +1,22 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import HeroSection from "@/components/HeroSection";
+import CategoryCards from "@/components/CategoryCards";
 
 const Index = () => {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
-    </div>
+    <main>
+      <HeroSection />
+      <CategoryCards />
+      <footer className="border-t border-border bg-card py-10">
+        <div className="container text-center">
+          <p className="font-serif text-lg font-bold tracking-wide text-foreground">
+            RESERVE<span className="text-primary">.</span>
+          </p>
+          <p className="mt-2 text-xs text-muted-foreground">
+            Must be 21+ to purchase. Please drink responsibly.
+          </p>
+        </div>
+      </footer>
+    </main>
   );
 };
 
