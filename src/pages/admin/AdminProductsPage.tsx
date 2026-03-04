@@ -44,13 +44,16 @@ export default function ProductsPage() {
     };
 
     return (
-        <div>
-            <div className="flex items-center justify-between mb-8">
+        <div className="space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl font-serif font-bold text-white">Products</h1>
-                    <p className="text-gray-500 text-sm mt-1">{products.length} products in catalog</p>
+                    <h1 className="text-xl sm:text-2xl font-serif font-bold text-white">Products</h1>
+                    <p className="text-gray-500 text-xs sm:text-sm mt-0.5">{products.length} products in catalog</p>
                 </div>
-                <button onClick={openCreate} className="flex items-center gap-2 bg-[#8b1a1a] hover:bg-[#c0392b] text-white px-4 py-2.5 rounded-md text-sm font-medium transition-colors">
+                <button
+                    onClick={openCreate}
+                    className="flex items-center justify-center gap-2 bg-[#8b1a1a] hover:bg-[#c0392b] text-white px-4 py-2.5 rounded-md text-sm font-medium transition-colors w-full sm:w-auto"
+                >
                     <Plus size={16} /> Add Product
                 </button>
             </div>
@@ -59,45 +62,59 @@ export default function ProductsPage() {
                 <div className="text-gray-500 text-center py-20">Loading...</div>
             ) : (
                 <div className="bg-[#111] border border-white/5 rounded-lg overflow-hidden">
-                    <table className="w-full text-sm">
-                        <thead>
-                            <tr className="text-xs uppercase tracking-widest text-gray-600 border-b border-white/5 bg-[#0d0d0d]">
-                                {["Product", "Brand", "Category", "Price", "Status", "Actions"].map((h) => (
-                                    <th key={h} className="px-5 py-4 text-left">{h}</th>
-                                ))}
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-white/5">
-                            {products.map((p: any) => (
-                                <tr key={p.id} className="hover:bg-white/2 transition-colors group">
-                                    <td className="px-5 py-4">
-                                        <div className="flex items-center gap-3">
-                                            {p.image_url && <img src={p.image_url} alt={p.name} className="w-10 h-10 object-cover rounded" />}
-                                            <span className="font-medium text-white">{p.name}</span>
-                                        </div>
-                                    </td>
-                                    <td className="px-5 py-4 text-gray-400">{p.brand}</td>
-                                    <td className="px-5 py-4"><span className="px-2 py-1 bg-white/5 rounded text-xs text-gray-300">{p.category}</span></td>
-                                    <td className="px-5 py-4 text-green-400 font-medium">${parseFloat(p.price).toFixed(2)}</td>
-                                    <td className="px-5 py-4">
-                                        <button onClick={() => toggleMutation.mutate({ id: p.id, is_active: !p.is_active })}>
-                                            {p.is_active
-                                                ? <ToggleRight size={22} className="text-green-400" />
-                                                : <ToggleLeft size={22} className="text-gray-600" />}
-                                        </button>
-                                    </td>
-                                    <td className="px-5 py-4">
-                                        <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                            <button onClick={() => openEdit(p)} className="p-1.5 hover:bg-white/10 rounded text-gray-400 hover:text-white transition-colors"><Pencil size={14} /></button>
-                                            <button onClick={() => { if (confirm("Deactivate this product?")) deleteMutation.mutate(p.id); }} className="p-1.5 hover:bg-red-500/10 rounded text-gray-400 hover:text-red-400 transition-colors"><Trash2 size={14} /></button>
-                                        </div>
-                                    </td>
+                    <div className="overflow-x-auto">
+                        <table className="w-full text-sm min-w-[600px]">
+                            <thead>
+                                <tr className="text-[10px] sm:text-xs uppercase tracking-widest text-gray-600 border-b border-white/5 bg-[#0d0d0d]">
+                                    <th className="px-4 sm:px-5 py-4 text-left">Product</th>
+                                    <th className="px-4 sm:px-5 py-4 text-left">Brand</th>
+                                    <th className="px-4 sm:px-5 py-4 text-left">Category</th>
+                                    <th className="px-4 sm:px-5 py-4 text-left">Price</th>
+                                    <th className="px-4 sm:px-5 py-4 text-left">Status</th>
+                                    <th className="px-4 sm:px-5 py-4 text-left">Actions</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody className="divide-y divide-white/5">
+                                {products.map((p: any) => (
+                                    <tr key={p.id} className="hover:bg-white/2 transition-colors group">
+                                        <td className="px-4 sm:px-5 py-4">
+                                            <div className="flex items-center gap-3">
+                                                {p.image_url && <img src={p.image_url} alt={p.name} className="w-8 h-8 sm:w-10 sm:h-10 object-cover rounded flex-shrink-0" />}
+                                                <span className="font-medium text-white line-clamp-1">{p.name}</span>
+                                            </div>
+                                        </td>
+                                        <td className="px-4 sm:px-5 py-4 text-gray-400 truncate max-w-[120px]">{p.brand}</td>
+                                        <td className="px-4 sm:px-5 py-4">
+                                            <span className="px-2 py-0.5 bg-white/5 rounded text-[10px] sm:text-xs text-gray-300">
+                                                {p.category}
+                                            </span>
+                                        </td>
+                                        <td className="px-4 sm:px-5 py-4 text-green-400 font-medium">${parseFloat(p.price).toFixed(2)}</td>
+                                        <td className="px-4 sm:px-5 py-4 text-left">
+                                            <button onClick={() => toggleMutation.mutate({ id: p.id, is_active: !p.is_active })}>
+                                                {p.is_active
+                                                    ? <ToggleRight size={22} className="text-green-400" />
+                                                    : <ToggleLeft size={22} className="text-gray-600" />}
+                                            </button>
+                                        </td>
+                                        <td className="px-4 sm:px-5 py-4">
+                                            <div className="flex items-center gap-2 lg:opacity-0 group-hover:opacity-100 transition-opacity">
+                                                <button onClick={() => openEdit(p)} className="p-1.5 hover:bg-white/10 rounded text-gray-400 hover:text-white transition-colors">
+                                                    <Pencil size={14} />
+                                                </button>
+                                                <button onClick={() => { if (confirm("Deactivate this product?")) deleteMutation.mutate(p.id); }} className="p-1.5 hover:bg-red-500/10 rounded text-gray-400 hover:text-red-400 transition-colors">
+                                                    <Trash2 size={14} />
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             )}
+
 
             {/* Modal */}
             {showModal && (

@@ -1,6 +1,7 @@
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import { useAdminAuth } from "@/context/AdminAuthContext";
-import { LayoutDashboard, Package, Warehouse, ShoppingBag, Users, LogOut, Boxes, ArrowLeft, Settings, FileText } from "lucide-react";
+import { LayoutDashboard, Package, Warehouse, ShoppingBag, Users, LogOut, Boxes, ArrowLeft, Settings, FileText, Menu, X } from "lucide-react";
+import { useState, useEffect } from "react";
 
 const navItems = [
     { to: "/admin", icon: LayoutDashboard, label: "Dashboard" },
@@ -15,21 +16,62 @@ const navItems = [
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
     const { user, logout } = useAdminAuth();
     const navigate = useNavigate();
+    const location = useLocation();
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     const handleLogout = () => { logout(); navigate("/admin/login"); };
 
+    // Close mobile menu when location changes
+    useEffect(() => {
+        setIsMobileMenuOpen(false);
+    }, [location]);
+
     return (
         <div className="flex h-screen bg-[#0a0a0a] overflow-hidden fixed inset-0 z-50">
+            {/* Mobile Header */}
+            <header className="lg:hidden fixed top-0 left-0 right-0 h-14 bg-[#111] border-b border-white/5 flex items-center justify-between px-4 z-40">
+                <div className="flex items-center gap-2">
+                    <Boxes size={18} className="text-[#8b1a1a]" />
+                    <span className="font-serif font-bold text-white text-base tracking-wide uppercase">RESERVE</span>
+                </div>
+                <button
+                    onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                    className="p-2 text-gray-400 hover:text-white transition-colors"
+                >
+                    {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+                </button>
+            </header>
+
+            {/* Backdrop for mobile */}
+            {isMobileMenuOpen && (
+                <div
+                    className="lg:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                />
+            )}
+
             {/* Sidebar */}
-            <aside className="w-60 flex-shrink-0 bg-[#111] border-r border-white/5 flex flex-col">
-                <div className="px-6 py-5 border-b border-white/5">
+            <aside className={`
+                fixed inset-y-0 left-0 z-50 w-60 bg-[#111] border-r border-white/5 flex flex-col transition-transform duration-300 lg:relative lg:translate-x-0
+                ${isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"}
+            `}>
+                <div className="px-6 py-5 border-b border-white/5 hidden lg:block">
                     <div className="flex items-center gap-2">
                         <Boxes size={18} className="text-[#8b1a1a]" />
                         <span className="font-serif font-bold text-white text-base tracking-wide uppercase">RESERVE</span>
                     </div>
                     <p className="text-[10px] uppercase tracking-widest text-gray-600 mt-0.5">Inventory Management</p>
                 </div>
-                <nav className="flex-1 px-3 py-4 space-y-1">
+
+                {/* Mobile version of logo area for consistency when open */}
+                <div className="px-6 py-5 border-b border-white/5 lg:hidden flex justify-between items-center">
+                    <div className="flex items-center gap-2">
+                        <Boxes size={18} className="text-[#8b1a1a]" />
+                        <span className="font-serif font-bold text-white text-base tracking-wide uppercase">RESERVE</span>
+                    </div>
+                </div>
+
+                <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
                     {navItems.map(({ to, icon: Icon, label }) => (
                         <NavLink
                             key={to}
@@ -47,6 +89,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                         </NavLink>
                     ))}
                 </nav>
+
                 <div className="px-4 py-4 border-t border-white/5 space-y-1">
                     <button
                         onClick={() => navigate("/")}
@@ -55,7 +98,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                         <ArrowLeft size={14} /> Back to Store
                     </button>
                     <div className="flex items-center gap-3 px-1 py-2">
-                        <div className="w-7 h-7 rounded-full bg-[#8b1a1a]/30 flex items-center justify-center text-xs font-bold text-[#c0392b] uppercase">
+                        <div className="w-7 h-7 rounded-full bg-[#8b1a1a]/30 flex items-center justify-center text-xs font-bold text-[#c0392b] uppercase flex-shrink-0">
                             {user?.first_name?.[0]}{user?.last_name?.[0]}
                         </div>
                         <div className="overflow-hidden">
@@ -73,9 +116,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             </aside>
 
             {/* Main */}
-            <main className="flex-1 overflow-auto bg-[#0a0a0a]">
-                <div className="p-8">{children}</div>
+            <main className="flex-1 overflow-auto bg-[#0a0a0a] pt-14 lg:pt-0">
+                <div className="p-4 sm:p-6 lg:p-8">{children}</div>
             </main>
         </div>
     );
 }
+
