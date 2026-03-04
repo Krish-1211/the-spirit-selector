@@ -1,12 +1,15 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAdminAuth } from "@/context/AdminAuthContext";
-import { LayoutDashboard, Package, Warehouse, ShoppingBag, LogOut, Wine, ArrowLeft } from "lucide-react";
+import { LayoutDashboard, Package, Warehouse, ShoppingBag, Users, LogOut, Boxes, ArrowLeft, Settings, FileText } from "lucide-react";
 
 const navItems = [
     { to: "/admin", icon: LayoutDashboard, label: "Dashboard" },
     { to: "/admin/products", icon: Package, label: "Products" },
     { to: "/admin/inventory", icon: Warehouse, label: "Inventory" },
     { to: "/admin/orders", icon: ShoppingBag, label: "Orders" },
+    { to: "/admin/invoices", icon: FileText, label: "Invoices" },
+    { to: "/admin/clients", icon: Users, label: "Clients" },
+    { to: "/admin/settings", icon: Settings, label: "Settings" },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -21,10 +24,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <aside className="w-60 flex-shrink-0 bg-[#111] border-r border-white/5 flex flex-col">
                 <div className="px-6 py-5 border-b border-white/5">
                     <div className="flex items-center gap-2">
-                        <Wine size={18} className="text-[#8b1a1a]" />
-                        <span className="font-serif font-bold text-white text-base tracking-wide">RESERVE</span>
+                        <Boxes size={18} className="text-[#8b1a1a]" />
+                        <span className="font-serif font-bold text-white text-base tracking-wide uppercase">KIM ADMIN</span>
                     </div>
-                    <p className="text-[10px] uppercase tracking-widest text-gray-600 mt-0.5">Admin Console</p>
+                    <p className="text-[10px] uppercase tracking-widest text-gray-600 mt-0.5">Inventory Management</p>
                 </div>
                 <nav className="flex-1 px-3 py-4 space-y-1">
                     {navItems.map(({ to, icon: Icon, label }) => (

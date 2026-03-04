@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "@/lib/adminApi";
+import CreateOrderDialog from "@/components/admin/CreateOrderDialog";
 
 const STATUSES = ["pending", "confirmed", "ready", "delivered", "cancelled"];
 const statusColor: Record<string, string> = {
@@ -51,6 +52,7 @@ export default function OrdersPage() {
                     <p className="text-gray-500 text-sm mt-1">{orders.length} orders</p>
                 </div>
                 <div className="flex gap-3">
+                    <CreateOrderDialog />
                     <select value={storeId} onChange={(e) => setStoreId(e.target.value)} className="bg-[#1a1a1a] border border-white/10 text-gray-300 text-sm rounded-md px-4 py-2 focus:outline-none focus:border-[#8b1a1a]">
                         <option value="">All Stores</option>
                         {stores.map((s: any) => <option key={s.id} value={s.id}>{s.name}</option>)}

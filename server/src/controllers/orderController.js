@@ -216,7 +216,7 @@ const getDashboardStats = async (req, res) => {
         let storeFilter = store_id ? "AND o.store_id = $1" : "";
         const params = store_id ? [store_id] : [];
 
-        const [revenueRes, ordersRes, lowStockRes, recentRes] = await Promise.all([
+        const [revenueRes, ordersRes, lowStockRes, recentRes, customerRes] = await Promise.all([
             query(`SELECT COALESCE(SUM(total),0) AS total_revenue FROM orders o WHERE status NOT IN ('cancelled') ${storeFilter}`, params),
             query(`SELECT COUNT(*) AS total_orders, status FROM orders o WHERE 1=1 ${storeFilter} GROUP BY status`, params),
             query(`
@@ -229,6 +229,7 @@ const getDashboardStats = async (req, res) => {
         JOIN stores s ON s.id = o.store_id WHERE 1=1 ${storeFilter}
         ORDER BY o.created_at DESC LIMIT 5
       `, params),
+            query("SELECT COUNT(*) AS count FROM customers"),
         ]);
 
         res.json({
@@ -236,6 +237,7 @@ const getDashboardStats = async (req, res) => {
             orders_by_status: ordersRes.rows,
             low_stock_count: parseInt(lowStockRes.rows[0].count),
             recent_orders: recentRes.rows,
+            total_clients: parseInt(customerRes.rows[0].count),
         });
     } catch (err) {
         console.error(err);

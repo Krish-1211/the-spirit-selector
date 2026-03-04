@@ -146,3 +146,23 @@ ON CONFLICT DO NOTHING;
 INSERT INTO admins (email, password_hash, first_name, last_name, role) VALUES
   ('admin@reservespirits.com', '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8v2q8N0PVjM5u9a6t6O', 'Reserve', 'Admin', 'superadmin')
 ON CONFLICT DO NOTHING;
+-- ========================
+-- SETTINGS
+-- ========================
+CREATE TABLE IF NOT EXISTS settings (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  key VARCHAR(100) UNIQUE NOT NULL,
+  value TEXT,
+  description TEXT,
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- SEED: Initial Settings
+INSERT INTO settings (key, value, description) VALUES
+  ('business_name', 'Sure Seal Sealants', 'Company legal name'),
+  ('business_email', 'billing@sureseal.com', 'Primary billing email'),
+  ('business_address', '123 Sealant Way, Sacramento, CA 95814', 'Company physical address'),
+  ('currency', 'USD', 'Default currency code'),
+  ('tax_rate', '0.10', 'Global tax rate (0.10 = 10%)'),
+  ('invoice_prefix', 'INV-', 'Prefix for generated invoice numbers')
+ON CONFLICT (key) DO NOTHING;

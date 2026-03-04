@@ -25,6 +25,9 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminProductsPage from "./pages/admin/AdminProductsPage";
 import AdminInventoryPage from "./pages/admin/AdminInventoryPage";
 import AdminOrdersPage from "./pages/admin/AdminOrdersPage";
+import AdminInvoicesPage from "./pages/admin/AdminInvoicesPage";
+import AdminClientsPage from "./pages/admin/AdminClientsPage";
+import AdminSettingsPage from "./pages/admin/AdminSettingsPage";
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { retry: 1, staleTime: 30000 } },
@@ -42,6 +45,9 @@ function AdminRoutes() {
         <Route path="/products" element={<AdminProductsPage />} />
         <Route path="/inventory" element={<AdminInventoryPage />} />
         <Route path="/orders" element={<AdminOrdersPage />} />
+        <Route path="/invoices" element={<AdminInvoicesPage />} />
+        <Route path="/clients" element={<AdminClientsPage />} />
+        <Route path="/settings" element={<AdminSettingsPage />} />
         <Route path="*" element={<Navigate to="/admin" replace />} />
       </Routes>
     </AdminLayout>

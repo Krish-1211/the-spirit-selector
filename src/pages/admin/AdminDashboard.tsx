@@ -38,7 +38,7 @@ export default function AdminDashboard() {
                     { label: "Total Revenue", value: `$${(stats?.total_revenue ?? 0).toLocaleString("en-US", { minimumFractionDigits: 2 })}`, icon: DollarSign, color: "text-green-400" },
                     { label: "Total Orders", value: totalOrders, icon: ShoppingBag, color: "text-blue-400" },
                     { label: "Low Stock Alerts", value: stats?.low_stock_count ?? 0, icon: AlertTriangle, color: "text-yellow-400" },
-                    { label: "Active Stores", value: stores.filter((s: any) => s.is_active).length, icon: TrendingUp, color: "text-purple-400" },
+                    { label: "Active Clients", value: stats?.total_clients ?? 0, icon: TrendingUp, color: "text-purple-400" },
                 ].map(({ label, value, icon: Icon, color }) => (
                     <div key={label} className="bg-[#111] border border-white/5 rounded-lg p-5">
                         <div className="flex items-center justify-between mb-3">
@@ -103,6 +103,6 @@ export default function AdminDashboard() {
                     </table>
                 ) : <p className="text-gray-600 text-sm">No recent orders</p>}
             </div>
-        </div>
+        </div >
     );
 }
