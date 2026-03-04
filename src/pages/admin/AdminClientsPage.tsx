@@ -34,53 +34,55 @@ export default function AdminClientsPage() {
             </div>
 
             <div className="bg-[#111] border border-white/5 rounded-lg overflow-hidden">
-                <table className="w-full text-sm">
-                    <thead>
-                        <tr className="text-xs uppercase tracking-widest text-gray-600 border-b border-white/5 bg-white/5">
-                            <th className="px-6 py-4 text-left">Client Name</th>
-                            <th className="px-6 py-4 text-left">Email / Phone</th>
-                            <th className="px-6 py-4 text-left text-center">Orders</th>
-                            <th className="px-6 py-4 text-left text-right">Total Spent</th>
-                            <th className="px-6 py-4 text-left text-right">Registered</th>
-                        </tr>
-                    </thead>
-                    <tbody className="divide-y divide-white/5">
-                        {isLoading ? (
-                            <tr><td colSpan={5} className="px-6 py-8 text-center text-gray-500">Loading clients...</td></tr>
-                        ) : clients.length === 0 ? (
-                            <tr><td colSpan={5} className="px-6 py-8 text-center text-gray-500">No clients found</td></tr>
-                        ) : (
-                            clients.map((client: any) => (
-                                <tr
-                                    key={client.id}
-                                    className="text-gray-300 hover:bg-white/[0.02] cursor-pointer transition-colors"
-                                    onClick={() => setSelectedClient(client)}
-                                >
-                                    <td className="px-6 py-4 text-white font-medium">
-                                        {client.first_name} {client.last_name}
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        <div className="flex flex-col">
-                                            <span className="flex items-center gap-1.5 text-xs"><Mail size={12} className="text-gray-500" /> {client.email}</span>
-                                            {client.phone && <span className="flex items-center gap-1.5 text-[10px] text-gray-500"><Phone size={10} /> {client.phone}</span>}
-                                        </div>
-                                    </td>
-                                    <td className="px-6 py-4 text-center">
-                                        <span className="bg-blue-500/10 text-blue-400 px-2 py-0.5 rounded text-xs">
-                                            {client.total_orders}
-                                        </span>
-                                    </td>
-                                    <td className="px-6 py-4 text-right text-green-400 font-medium">
-                                        ${parseFloat(client.total_spent || 0).toFixed(2)}
-                                    </td>
-                                    <td className="px-6 py-4 text-right text-xs text-gray-500">
-                                        {format(new Date(client.created_at), "MMM d, yyyy")}
-                                    </td>
-                                </tr>
-                            ))
-                        )}
-                    </tbody>
-                </table>
+                <div className="overflow-x-auto">
+                    <table className="w-full text-sm min-w-[700px]">
+                        <thead>
+                            <tr className="text-[10px] sm:text-xs uppercase tracking-widest text-gray-600 border-b border-white/5 bg-white/5">
+                                <th className="px-4 sm:px-6 py-4 text-left">Client Name</th>
+                                <th className="px-4 sm:px-6 py-4 text-left">Email / Phone</th>
+                                <th className="px-4 sm:px-6 py-4 text-left sm:text-center">Orders</th>
+                                <th className="px-4 sm:px-6 py-4 text-left sm:text-right">Total Spent</th>
+                                <th className="px-4 sm:px-6 py-4 text-left sm:text-right">Registered</th>
+                            </tr>
+                        </thead>
+                        <tbody className="divide-y divide-white/5">
+                            {isLoading ? (
+                                <tr><td colSpan={5} className="px-6 py-8 text-center text-gray-500">Loading clients...</td></tr>
+                            ) : clients.length === 0 ? (
+                                <tr><td colSpan={5} className="px-6 py-8 text-center text-gray-500">No clients found</td></tr>
+                            ) : (
+                                clients.map((client: any) => (
+                                    <tr
+                                        key={client.id}
+                                        className="text-gray-300 hover:bg-white/[0.02] cursor-pointer transition-colors"
+                                        onClick={() => setSelectedClient(client)}
+                                    >
+                                        <td className="px-4 sm:px-6 py-4 text-white font-medium text-xs sm:text-sm">
+                                            {client.first_name} {client.last_name}
+                                        </td>
+                                        <td className="px-4 sm:px-6 py-4">
+                                            <div className="flex flex-col">
+                                                <span className="flex items-center gap-1.5 text-[10px] sm:text-xs"><Mail size={12} className="text-gray-500" /> {client.email}</span>
+                                                {client.phone && <span className="flex items-center gap-1.5 text-[10px] text-gray-500"><Phone size={10} /> {client.phone}</span>}
+                                            </div>
+                                        </td>
+                                        <td className="px-4 sm:px-6 py-4 sm:text-center">
+                                            <span className="bg-blue-500/10 text-blue-400 px-2 py-0.5 rounded text-[10px] sm:text-xs">
+                                                {client.total_orders}
+                                            </span>
+                                        </td>
+                                        <td className="px-4 sm:px-6 py-4 sm:text-right text-green-400 font-medium text-xs sm:text-sm">
+                                            ${parseFloat(client.total_spent || 0).toFixed(2)}
+                                        </td>
+                                        <td className="px-4 sm:px-6 py-4 sm:text-right text-[10px] sm:text-xs text-gray-500">
+                                            {format(new Date(client.created_at), "MMM d, yyyy")}
+                                        </td>
+                                    </tr>
+                                ))
+                            )}
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             <Dialog open={!!selectedClient} onOpenChange={(open) => !open && setSelectedClient(null)}>
@@ -140,8 +142,8 @@ export default function AdminClientsPage() {
                                                         <td className="px-4 py-2 text-gray-400">{format(new Date(order.created_at), "MMM d, yyyy")}</td>
                                                         <td className="px-4 py-2">
                                                             <span className={`px-1.5 py-0.5 rounded-sm capitalize ${order.status === 'delivered' ? 'bg-green-500/10 text-green-400' :
-                                                                    order.status === 'pending' ? 'bg-yellow-500/10 text-yellow-400' :
-                                                                        'bg-blue-500/10 text-blue-400'
+                                                                order.status === 'pending' ? 'bg-yellow-500/10 text-yellow-400' :
+                                                                    'bg-blue-500/10 text-blue-400'
                                                                 }`}>
                                                                 {order.status}
                                                             </span>

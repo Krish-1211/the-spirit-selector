@@ -33,16 +33,16 @@ export default function InventoryPage() {
     };
 
     return (
-        <div>
-            <div className="flex items-center justify-between mb-8">
+        <div className="space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl font-serif font-bold text-white">Inventory</h1>
-                    <p className="text-gray-500 text-sm mt-1">Manage stock levels per store</p>
+                    <h1 className="text-xl sm:text-2xl font-serif font-bold text-white">Inventory</h1>
+                    <p className="text-gray-500 text-xs sm:text-sm mt-0.5">Manage stock levels per store</p>
                 </div>
                 <select
                     value={storeId}
                     onChange={(e) => setStoreId(e.target.value)}
-                    className="bg-[#1a1a1a] border border-white/10 text-gray-300 text-sm rounded-md px-4 py-2 focus:outline-none focus:border-[#8b1a1a]"
+                    className="w-full sm:w-auto bg-[#1a1a1a] border border-white/10 text-gray-300 text-xs sm:text-sm rounded-md px-4 py-2 focus:outline-none focus:border-[#8b1a1a]"
                 >
                     <option value="">All Stores</option>
                     {stores.map((s: any) => <option key={s.id} value={s.id}>{s.name}</option>)}
@@ -53,37 +53,44 @@ export default function InventoryPage() {
                 <div className="text-gray-500 text-center py-20">Loading...</div>
             ) : (
                 <div className="bg-[#111] border border-white/5 rounded-lg overflow-hidden">
-                    <table className="w-full text-sm">
-                        <thead>
-                            <tr className="text-xs uppercase tracking-widest text-gray-600 border-b border-white/5 bg-[#0d0d0d]">
-                                {["Product", "Store", "Stock", "Reserved", "Available", "Threshold", "Status", ""].map((h) => (
-                                    <th key={h} className="px-5 py-4 text-left">{h}</th>
-                                ))}
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-white/5">
-                            {inventory.map((item: any) => (
-                                <tr key={item.id} className="hover:bg-white/2 transition-colors group">
-                                    <td className="px-5 py-4">
-                                        <p className="font-medium text-white">{item.product_name}</p>
-                                        <p className="text-xs text-gray-500">{item.brand} · {item.category}</p>
-                                    </td>
-                                    <td className="px-5 py-4 text-gray-400 text-xs">{item.store_name}</td>
-                                    <td className="px-5 py-4 text-white font-bold">{item.stock_quantity}</td>
-                                    <td className="px-5 py-4 text-yellow-400">{item.reserved_quantity || 0}</td>
-                                    <td className="px-5 py-4 text-green-400 font-bold">{item.available_quantity}</td>
-                                    <td className="px-5 py-4 text-gray-500">{item.low_stock_threshold}</td>
-                                    <td className="px-5 py-4">{getStatusBadge(item)}</td>
-                                    <td className="px-5 py-4">
-                                        <button onClick={() => openEdit(item)} className="opacity-0 group-hover:opacity-100 p-1.5 hover:bg-white/10 rounded text-gray-400 hover:text-white transition-all">
-                                            <Pencil size={14} />
-                                        </button>
-                                    </td>
+                    <div className="overflow-x-auto">
+                        <table className="w-full text-sm min-w-[700px]">
+                            <thead>
+                                <tr className="text-[10px] sm:text-xs uppercase tracking-widest text-gray-600 border-b border-white/5 bg-[#0d0d0d]">
+                                    <th className="px-4 sm:px-5 py-4 text-left">Product</th>
+                                    <th className="px-4 sm:px-5 py-4 text-left">Store</th>
+                                    <th className="px-4 sm:px-5 py-4 text-left">Stock</th>
+                                    <th className="px-4 sm:px-5 py-4 text-left">Reserved</th>
+                                    <th className="px-4 sm:px-5 py-4 text-left">Available</th>
+                                    <th className="px-4 sm:px-5 py-4 text-left">Threshold</th>
+                                    <th className="px-4 sm:px-5 py-4 text-left">Status</th>
+                                    <th className="px-4 sm:px-5 py-4 text-left"></th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                    {inventory.length === 0 && <p className="text-gray-600 text-sm text-center py-12">No inventory records found</p>}
+                            </thead>
+                            <tbody className="divide-y divide-white/5">
+                                {inventory.map((item: any) => (
+                                    <tr key={item.id} className="hover:bg-white/2 transition-colors group">
+                                        <td className="px-4 sm:px-5 py-4">
+                                            <p className="font-medium text-white line-clamp-1">{item.product_name}</p>
+                                            <p className="text-[10px] sm:text-xs text-gray-500 truncate max-w-[120px]">{item.brand} · {item.category}</p>
+                                        </td>
+                                        <td className="px-4 sm:px-5 py-4 text-gray-400 text-[10px] sm:text-xs truncate max-w-[120px]">{item.store_name}</td>
+                                        <td className="px-4 sm:px-5 py-4 text-white font-bold">{item.stock_quantity}</td>
+                                        <td className="px-4 sm:px-5 py-4 text-yellow-400 lg:text-center text-left">{item.reserved_quantity || 0}</td>
+                                        <td className="px-4 sm:px-5 py-4 text-green-400 font-bold">{item.available_quantity}</td>
+                                        <td className="px-4 sm:px-5 py-4 text-gray-500 lg:text-center text-left">{item.low_stock_threshold}</td>
+                                        <td className="px-4 sm:px-5 py-4">{getStatusBadge(item)}</td>
+                                        <td className="px-4 sm:px-5 py-4 text-right">
+                                            <button onClick={() => openEdit(item)} className="lg:opacity-0 group-hover:opacity-100 p-1.5 hover:bg-white/10 rounded text-gray-400 hover:text-white transition-all inline-flex items-center justify-center">
+                                                <Pencil size={14} />
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                    {inventory.length === 0 && <p className="text-gray-600 text-[10px] sm:text-sm text-center py-12">No inventory records found</p>}
                 </div>
             )}
 

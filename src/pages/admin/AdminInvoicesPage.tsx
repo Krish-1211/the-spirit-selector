@@ -48,15 +48,15 @@ export default function AdminInvoicesPage() {
     };
 
     return (
-        <div>
-            <div className="flex items-center justify-between mb-8">
+        <div className="space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl font-serif font-bold text-white">Invoice Management</h1>
-                    <p className="text-gray-500 text-sm mt-1">Generate and track professional invoices for client orders</p>
+                    <h1 className="text-xl sm:text-2xl font-serif font-bold text-white">Invoice Management</h1>
+                    <p className="text-gray-500 text-xs sm:text-sm mt-0.5">Generate and track professional invoices for client orders</p>
                 </div>
             </div>
 
-            <div className="flex gap-4 mb-6">
+            <div className="flex flex-col sm:flex-row gap-4 mb-6">
                 <div className="flex-1 relative">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
                     <input
@@ -67,76 +67,78 @@ export default function AdminInvoicesPage() {
                         className="w-full bg-[#111] border border-white/10 rounded-md pl-10 pr-4 py-2 text-sm text-white focus:outline-none focus:border-blue-500/50"
                     />
                 </div>
-                <button className="bg-[#111] border border-white/10 rounded-md px-4 py-2 text-sm text-gray-400 flex items-center gap-2 hover:bg-white/5 transition-colors">
+                <button className="bg-[#111] border border-white/10 rounded-md px-4 py-2 text-sm text-gray-400 flex items-center justify-center gap-2 hover:bg-white/5 transition-colors w-full sm:w-auto">
                     <Filter size={16} /> Filter
                 </button>
             </div>
 
             <div className="bg-[#111] border border-white/5 rounded-lg overflow-hidden">
-                <table className="w-full text-sm">
-                    <thead>
-                        <tr className="text-xs uppercase tracking-widest text-gray-600 border-b border-white/5 bg-white/5">
-                            <th className="px-6 py-4 text-left">Invoice / Order #</th>
-                            <th className="px-6 py-4 text-left">Customer</th>
-                            <th className="px-6 py-4 text-left">Date</th>
-                            <th className="px-6 py-4 text-left">Amount</th>
-                            <th className="px-6 py-4 text-left">Status</th>
-                            <th className="px-6 py-4 text-right">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody className="divide-y divide-white/5">
-                        {ordersLoading ? (
-                            <tr><td colSpan={6} className="px-6 py-8 text-center text-gray-500">Loading orders...</td></tr>
-                        ) : filteredOrders.length === 0 ? (
-                            <tr><td colSpan={6} className="px-6 py-8 text-center text-gray-500">No matching orders found</td></tr>
-                        ) : (
-                            filteredOrders.map((order: any) => (
-                                <tr key={order.id} className="text-gray-300 hover:bg-white/[0.02] transition-colors">
-                                    <td className="px-6 py-4">
-                                        <span className="font-mono text-white">#{order.order_number}</span>
-                                        <p className="text-[10px] text-gray-500 mt-0.5 uppercase tracking-tighter">Generated {format(new Date(order.created_at), "MMM d")}</p>
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        <div className="text-sm font-medium text-gray-200">{order.first_name} {order.last_name}</div>
-                                        <div className="text-xs text-gray-500">{order.customer_email}</div>
-                                    </td>
-                                    <td className="px-6 py-4 text-xs text-gray-400">
-                                        {format(new Date(order.created_at), "MMMM d, yyyy")}
-                                    </td>
-                                    <td className="px-6 py-4 text-white font-medium">
-                                        ${parseFloat(order.total).toFixed(2)}
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-widest ${order.status === 'delivered' ? 'bg-green-500/10 text-green-500' :
+                <div className="overflow-x-auto">
+                    <table className="w-full text-sm min-w-[700px]">
+                        <thead>
+                            <tr className="text-[10px] sm:text-xs uppercase tracking-widest text-gray-600 border-b border-white/5 bg-white/5">
+                                <th className="px-4 sm:px-6 py-4 text-left">Invoice / Order #</th>
+                                <th className="px-4 sm:px-6 py-4 text-left">Customer</th>
+                                <th className="px-4 sm:px-6 py-4 text-left">Date</th>
+                                <th className="px-4 sm:px-6 py-4 text-left">Amount</th>
+                                <th className="px-4 sm:px-6 py-4 text-left">Status</th>
+                                <th className="px-4 sm:px-6 py-4 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody className="divide-y divide-white/5">
+                            {ordersLoading ? (
+                                <tr><td colSpan={6} className="px-6 py-8 text-center text-gray-500">Loading orders...</td></tr>
+                            ) : filteredOrders.length === 0 ? (
+                                <tr><td colSpan={6} className="px-6 py-8 text-center text-gray-500">No matching orders found</td></tr>
+                            ) : (
+                                filteredOrders.map((order: any) => (
+                                    <tr key={order.id} className="text-gray-300 hover:bg-white/[0.02] transition-colors">
+                                        <td className="px-4 sm:px-6 py-4">
+                                            <span className="font-mono text-white text-xs sm:text-sm">#{order.order_number}</span>
+                                            <p className="text-[10px] text-gray-500 mt-0.5 uppercase tracking-tighter sm:tracking-widest">Generated {format(new Date(order.created_at), "MMM d")}</p>
+                                        </td>
+                                        <td className="px-4 sm:px-6 py-4">
+                                            <div className="text-xs sm:text-sm font-medium text-gray-200">{order.first_name} {order.last_name}</div>
+                                            <div className="text-[10px] sm:text-xs text-gray-500">{order.customer_email}</div>
+                                        </td>
+                                        <td className="px-4 sm:px-6 py-4 text-[10px] sm:text-xs text-gray-400 whitespace-nowrap">
+                                            {format(new Date(order.created_at), "MMMM d, yyyy")}
+                                        </td>
+                                        <td className="px-4 sm:px-6 py-4 text-white font-medium text-xs sm:text-sm">
+                                            ${parseFloat(order.total).toFixed(2)}
+                                        </td>
+                                        <td className="px-4 sm:px-6 py-4">
+                                            <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-widest ${order.status === 'delivered' ? 'bg-green-500/10 text-green-500' :
                                                 order.status === 'cancelled' ? 'bg-red-500/10 text-red-500' :
                                                     'bg-blue-500/10 text-blue-400'
-                                            }`}>
-                                            {order.status}
-                                        </span>
-                                    </td>
-                                    <td className="px-6 py-4 text-right">
-                                        <div className="flex items-center justify-end gap-2">
-                                            <button
-                                                onClick={() => setSelectedOrder(order)}
-                                                className="p-2 hover:bg-white/5 rounded-md text-gray-400 hover:text-white transition-colors"
-                                                title="View Details"
-                                            >
-                                                <Eye size={16} />
-                                            </button>
-                                            <button
-                                                onClick={() => handleDownload(order)}
-                                                className="p-2 hover:bg-blue-500/10 rounded-md text-blue-400 hover:text-blue-300 transition-colors"
-                                                title="Download PDF"
-                                            >
-                                                <Download size={16} />
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))
-                        )}
-                    </tbody>
-                </table>
+                                                }`}>
+                                                {order.status}
+                                            </span>
+                                        </td>
+                                        <td className="px-4 sm:px-6 py-4 text-right">
+                                            <div className="flex items-center justify-end gap-1 sm:gap-2">
+                                                <button
+                                                    onClick={() => setSelectedOrder(order)}
+                                                    className="p-1.5 sm:p-2 hover:bg-white/5 rounded-md text-gray-400 hover:text-white transition-colors"
+                                                    title="View Details"
+                                                >
+                                                    <Eye size={16} />
+                                                </button>
+                                                <button
+                                                    onClick={() => handleDownload(order)}
+                                                    className="p-1.5 sm:p-2 hover:bg-blue-500/10 rounded-md text-blue-400 hover:text-blue-300 transition-colors"
+                                                    title="Download PDF"
+                                                >
+                                                    <Download size={16} />
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))
+                            )}
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             <Dialog open={!!selectedOrder} onOpenChange={(open) => !open && setSelectedOrder(null)}>

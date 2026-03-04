@@ -53,33 +53,33 @@ export default function AdminSettingsPage() {
                         <Building2 size={16} className="text-blue-400" />
                         <h2 className="text-sm font-semibold uppercase tracking-widest text-gray-300">Business Identity</h2>
                     </div>
-                    <div className="p-6 grid grid-cols-2 gap-6">
+                    <div className="p-4 sm:p-6 grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                         <div className="space-y-2">
-                            <label className="text-xs text-gray-500 uppercase tracking-wider">Company Name</label>
+                            <label className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-wider">Company Name</label>
                             <input
                                 type="text"
                                 value={formData.business_name || ""}
                                 onChange={(e) => setFormData({ ...formData, business_name: e.target.value })}
-                                className="w-full bg-black border border-white/10 rounded-md px-4 py-2.5 text-sm text-white focus:border-blue-500/50 outline-none transition-colors"
+                                className="w-full bg-black border border-white/10 rounded-md px-4 py-2.5 text-xs sm:text-sm text-white focus:border-blue-500/50 outline-none transition-colors"
                                 placeholder="e.g. Sure Seal Sealants"
                             />
                         </div>
                         <div className="space-y-2">
-                            <label className="text-xs text-gray-500 uppercase tracking-wider">Support Email</label>
+                            <label className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-wider">Support Email</label>
                             <input
                                 type="email"
                                 value={formData.business_email || ""}
                                 onChange={(e) => setFormData({ ...formData, business_email: e.target.value })}
-                                className="w-full bg-black border border-white/10 rounded-md px-4 py-2.5 text-sm text-white focus:border-blue-500/50 outline-none transition-colors"
+                                className="w-full bg-black border border-white/10 rounded-md px-4 py-2.5 text-xs sm:text-sm text-white focus:border-blue-500/50 outline-none transition-colors"
                                 placeholder="billing@company.com"
                             />
                         </div>
-                        <div className="col-span-2 space-y-2">
-                            <label className="text-xs text-gray-500 uppercase tracking-wider">Physical Address</label>
+                        <div className="col-span-1 md:col-span-2 space-y-2">
+                            <label className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-wider">Physical Address</label>
                             <textarea
                                 value={formData.business_address || ""}
                                 onChange={(e) => setFormData({ ...formData, business_address: e.target.value })}
-                                className="w-full bg-black border border-white/10 rounded-md px-4 py-2.5 text-sm text-white focus:border-blue-500/50 outline-none transition-colors h-24 resize-none"
+                                className="w-full bg-black border border-white/10 rounded-md px-4 py-2.5 text-xs sm:text-sm text-white focus:border-blue-500/50 outline-none transition-colors h-24 resize-none"
                                 placeholder="Enter full business address"
                             />
                         </div>
@@ -92,13 +92,13 @@ export default function AdminSettingsPage() {
                         <Landmark size={16} className="text-green-400" />
                         <h2 className="text-sm font-semibold uppercase tracking-widest text-gray-300">Financial Preferences</h2>
                     </div>
-                    <div className="p-6 grid grid-cols-3 gap-6">
+                    <div className="p-4 sm:p-6 grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
                         <div className="space-y-2">
-                            <label className="text-xs text-gray-500 uppercase tracking-wider">Currency</label>
+                            <label className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-wider">Currency</label>
                             <select
                                 value={formData.currency || "USD"}
                                 onChange={(e) => setFormData({ ...formData, currency: e.target.value })}
-                                className="w-full bg-black border border-white/10 rounded-md px-4 py-2.5 text-sm text-white focus:border-green-500/50 outline-none transition-colors"
+                                className="w-full bg-black border border-white/10 rounded-md px-4 py-2.5 text-xs sm:text-sm text-white focus:border-green-500/50 outline-none transition-colors"
                             >
                                 <option value="USD">USD ($)</option>
                                 <option value="EUR">EUR (€)</option>
@@ -107,23 +107,23 @@ export default function AdminSettingsPage() {
                             </select>
                         </div>
                         <div className="space-y-2">
-                            <label className="text-xs text-gray-500 uppercase tracking-wider">Tax Rate (%)</label>
+                            <label className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-wider">Tax Rate (%)</label>
                             <input
                                 type="number"
                                 step="0.01"
                                 value={formData.tax_rate || ""}
                                 onChange={(e) => setFormData({ ...formData, tax_rate: e.target.value })}
-                                className="w-full bg-black border border-white/10 rounded-md px-4 py-2.5 text-sm text-white focus:border-green-500/50 outline-none transition-colors"
+                                className="w-full bg-black border border-white/10 rounded-md px-4 py-2.5 text-xs sm:text-sm text-white focus:border-green-500/50 outline-none transition-colors"
                                 placeholder="0.10"
                             />
                         </div>
                         <div className="space-y-2">
-                            <label className="text-xs text-gray-500 uppercase tracking-wider">Invoice Prefix</label>
+                            <label className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-wider">Invoice Prefix</label>
                             <input
                                 type="text"
                                 value={formData.invoice_prefix || ""}
                                 onChange={(e) => setFormData({ ...formData, invoice_prefix: e.target.value })}
-                                className="w-full bg-black border border-white/10 rounded-md px-4 py-2.5 text-sm text-white focus:border-green-500/50 outline-none transition-colors"
+                                className="w-full bg-black border border-white/10 rounded-md px-4 py-2.5 text-xs sm:text-sm text-white focus:border-green-500/50 outline-none transition-colors"
                                 placeholder="INV-"
                             />
                         </div>
@@ -131,13 +131,13 @@ export default function AdminSettingsPage() {
                 </div>
 
                 {/* Notifications & Security */}
-                <div className="grid grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                     <div className="bg-[#111] border border-white/5 rounded-lg overflow-hidden">
                         <div className="px-6 py-4 border-b border-white/5 bg-white/[0.02] flex items-center gap-2">
                             <Bell size={16} className="text-purple-400" />
                             <h2 className="text-sm font-semibold uppercase tracking-widest text-gray-300">Notifications</h2>
                         </div>
-                        <div className="p-6 space-y-4">
+                        <div className="p-4 sm:p-6 space-y-4">
                             <div className="flex items-center justify-between">
                                 <span className="text-xs text-gray-400">Low Stock Alerts</span>
                                 <div
@@ -164,7 +164,7 @@ export default function AdminSettingsPage() {
                             <Shield size={16} className="text-red-400" />
                             <h2 className="text-sm font-semibold uppercase tracking-widest text-gray-300">Security</h2>
                         </div>
-                        <div className="p-6 space-y-4">
+                        <div className="p-4 sm:p-6 space-y-4">
                             <button
                                 type="button"
                                 className="w-full text-left text-xs text-gray-400 hover:text-white transition-colors flex items-center justify-between group"
