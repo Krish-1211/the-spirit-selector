@@ -10,6 +10,8 @@ import { CustomerAuthProvider } from "@/context/CustomerAuthContext";
 import Header from "@/components/Header";
 import StoreModal from "@/components/StoreModal";
 import AdminLayout from "@/components/admin/AdminLayout";
+import AgeVerificationModal from "@/components/AgeVerificationModal";
+
 
 // Public pages
 import Index from "./pages/Index";
@@ -79,8 +81,10 @@ const App = () => (
         <CustomerAuthProvider>
           <StoreProvider>
             <CartProvider>
+              <AgeVerificationModal />
               <Toaster />
               <Sonner />
+
               <BrowserRouter>
                 <Routes>
                   {/* Admin section — fully isolated, no public header */}
