@@ -1,14 +1,24 @@
-import { Search, ShoppingCart, User, MapPin, ChevronDown } from "lucide-react";
+import { Search, ShoppingCart, User, MapPin, ChevronDown, LogOut } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useStore } from "@/context/StoreContext";
 import { useCart } from "@/context/CartContext";
-import { useState } from "react";
+import { useCustomerAuth } from "@/context/CustomerAuthContext";
+import { useState, useRef, useEffect } from "react";
 
 export default function Header() {
   const { selectedStore, fulfillment, setFulfillment, setShowStoreModal } = useStore();
   const { totalItems } = useCart();
+  const { customer, logout } = useCustomerAuth();
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
+  const [showAccountMenu, setShowAccountMenu] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => { if (menuRef.current && !menuRef.current.contains(e.target as Node)) setShowAccountMenu(false); };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
 
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/80">
@@ -56,26 +66,51 @@ export default function Header() {
         <div className="hidden items-center rounded-sm border border-border p-0.5 text-xs xl:flex">
           <button
             onClick={() => setFulfillment("pickup")}
-            className={`rounded-sm px-3 py-1.5 font-medium transition-colors ${
-              fulfillment === "pickup" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"
-            }`}
+            className={`rounded-sm px-3 py-1.5 font-medium transition-colors ${fulfillment === "pickup" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"
+              }`}
           >
             Pickup
           </button>
           <button
             onClick={() => setFulfillment("delivery")}
-            className={`rounded-sm px-3 py-1.5 font-medium transition-colors ${
-              fulfillment === "delivery" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"
-            }`}
+            className={`rounded-sm px-3 py-1.5 font-medium transition-colors ${fulfillment === "delivery" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"
+              }`}
           >
             Delivery
           </button>
         </div>
 
         {/* Account */}
-        <button className="rounded-sm p-2 text-muted-foreground transition-colors hover:text-foreground">
-          <User className="h-5 w-5" />
-        </button>
+        <div className="relative" ref={menuRef}>
+          {customer ? (
+            <>
+              <button
+                onClick={() => setShowAccountMenu(!showAccountMenu)}
+                className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary uppercase transition-colors hover:bg-primary/20"
+              >
+                {customer.first_name[0]}{customer.last_name[0]}
+              </button>
+              {showAccountMenu && (
+                <div className="absolute right-0 top-full mt-2 w-48 rounded-sm border border-border bg-card shadow-xl z-50">
+                  <div className="px-4 py-3 border-b border-border">
+                    <p className="text-sm font-medium text-foreground">{customer.first_name} {customer.last_name}</p>
+                    <p className="text-xs text-muted-foreground truncate">{customer.email}</p>
+                  </div>
+                  <button
+                    onClick={() => { logout(); setShowAccountMenu(false); }}
+                    className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-muted-foreground hover:text-red-400 hover:bg-secondary/50 transition-colors"
+                  >
+                    <LogOut className="h-4 w-4" /> Sign Out
+                  </button>
+                </div>
+              )}
+            </>
+          ) : (
+            <Link to="/account" className="rounded-sm p-2 text-muted-foreground transition-colors hover:text-foreground">
+              <User className="h-5 w-5" />
+            </Link>
+          )}
+        </div>
 
         {/* Cart */}
         <Link

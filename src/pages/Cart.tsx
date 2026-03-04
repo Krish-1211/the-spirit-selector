@@ -1,33 +1,54 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Minus, Plus, Trash2, CheckCircle, Loader2 } from "lucide-react";
+import { Minus, Plus, Trash2, CheckCircle, Loader2, User, LogOut } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useStore } from "@/context/StoreContext";
+import { useCustomerAuth } from "@/context/CustomerAuthContext";
 import { api } from "@/lib/api";
 
 export default function Cart() {
   const { items, updateQuantity, removeItem, subtotal, clearCart } = useCart();
   const { selectedStore, fulfillment, setFulfillment } = useStore();
+  const { customer, logout } = useCustomerAuth();
   const navigate = useNavigate();
 
+  const [step, setStep] = useState<"cart" | "checkout">("cart");
   const [ageConfirmed, setAgeConfirmed] = useState(false);
   const [placing, setPlacing] = useState(false);
   const [confirmed, setConfirmed] = useState<{ order_number: number } | null>(null);
   const [error, setError] = useState("");
 
+  // Checkout form (pre-fill from customer profile)
+  const [checkout, setCheckout] = useState({
+    delivery_address: customer?.address || "",
+    notes: "",
+  });
+
   const deliveryFee = fulfillment === "delivery" ? 5.99 : 0;
   const tax = subtotal * 0.10;
   const total = subtotal + tax + deliveryFee;
 
+  const proceedToCheckout = () => {
+    if (!customer) {
+      navigate("/account?redirect=/cart");
+      return;
+    }
+    setStep("checkout");
+  };
+
   const placeOrder = async () => {
     if (!selectedStore) return setError("Please select a store first.");
     if (!ageConfirmed) return;
+    if (fulfillment === "delivery" && !checkout.delivery_address.trim()) return setError("Please enter a delivery address.");
     setPlacing(true);
     setError("");
     try {
       const payload = {
         store_id: selectedStore.id,
+        customer_id: customer?.id,
         delivery_type: fulfillment,
+        delivery_address: fulfillment === "delivery" ? checkout.delivery_address : undefined,
+        notes: checkout.notes || undefined,
         items: items.map((i) => ({
           product_id: i.product.id,
           quantity: i.quantity,
@@ -44,7 +65,7 @@ export default function Cart() {
     }
   };
 
-  // Order confirmed screen
+  // ── Order confirmed ──────────────────────────────────────────────────────
   if (confirmed) {
     return (
       <main className="flex min-h-[70vh] flex-col items-center justify-center gap-6 text-center px-4">
@@ -54,6 +75,11 @@ export default function Cart() {
           <p className="mt-2 text-muted-foreground">
             Your order <span className="font-bold text-foreground">#{confirmed.order_number}</span> has been placed.
           </p>
+          {customer && (
+            <p className="mt-1 text-sm text-muted-foreground">
+              Confirmation sent to <span className="text-foreground font-medium">{customer.email}</span>
+            </p>
+          )}
           {selectedStore && (
             <p className="mt-1 text-sm text-muted-foreground">
               {fulfillment === "pickup" ? `Ready for pickup at ${selectedStore.name}` : `Delivery from ${selectedStore.name}`}
@@ -70,6 +96,7 @@ export default function Cart() {
     );
   }
 
+  // ── Empty cart ────────────────────────────────────────────────────────────
   if (items.length === 0) {
     return (
       <main className="flex min-h-[60vh] flex-col items-center justify-center gap-4">
@@ -87,63 +114,143 @@ export default function Cart() {
   return (
     <main className="min-h-screen">
       <div className="container py-8">
-        <h1 className="mb-8 font-serif text-3xl font-bold text-foreground">Your Cart</h1>
+        <h1 className="mb-8 font-serif text-3xl font-bold text-foreground">
+          {step === "cart" ? "Your Cart" : "Checkout"}
+        </h1>
 
         <div className="grid gap-10 lg:grid-cols-[1fr_380px]">
-          {/* Items */}
-          <div className="space-y-4">
-            {items.map(({ product, quantity }) => {
-              const price = parseFloat(String((product as any).price));
-              const imageUrl = (product as any).image_url || (product as any).image || null;
-              const volume = (product as any).volume_ml
-                ? (product as any).volume_ml >= 1000
-                  ? `${(product as any).volume_ml / 1000}L`
-                  : `${(product as any).volume_ml}ml`
-                : (product as any).volume || "";
+          {/* Left column */}
+          <div>
+            {/* ── Step 1: Cart Items ────────────────────────────────────── */}
+            {step === "cart" && (
+              <div className="space-y-4">
+                {items.map(({ product, quantity }) => {
+                  const price = parseFloat(String((product as any).price));
+                  const imageUrl = (product as any).image_url || (product as any).image || null;
+                  const volume = (product as any).volume_ml
+                    ? (product as any).volume_ml >= 1000
+                      ? `${(product as any).volume_ml / 1000}L`
+                      : `${(product as any).volume_ml}ml`
+                    : (product as any).volume || "";
 
-              return (
-                <div key={product.id} className="flex gap-4 rounded-sm border border-border bg-card p-4">
-                  <Link to={`/product/${product.id}`} className="h-24 w-20 flex-shrink-0 overflow-hidden rounded-sm bg-secondary">
-                    {imageUrl ? (
-                      <img src={imageUrl} alt={product.name} className="h-full w-full object-cover" />
-                    ) : (
-                      <div className="h-full w-full flex items-center justify-center text-[10px] text-muted-foreground uppercase">{(product as any).category}</div>
-                    )}
-                  </Link>
-                  <div className="flex flex-1 flex-col">
-                    <p className="text-[10px] uppercase tracking-widest text-muted-foreground">{product.brand}</p>
-                    <Link to={`/product/${product.id}`} className="font-serif text-sm font-semibold text-foreground hover:text-primary">
-                      {product.name}
-                    </Link>
-                    <p className="mt-1 text-xs text-muted-foreground">{volume}</p>
-                    <div className="mt-auto flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <button onClick={() => updateQuantity(product.id, quantity - 1)} className="flex h-7 w-7 items-center justify-center rounded-sm border border-border text-muted-foreground hover:text-foreground">
-                          <Minus className="h-3 w-3" />
-                        </button>
-                        <span className="w-8 text-center text-sm font-medium text-foreground">{quantity}</span>
-                        <button onClick={() => updateQuantity(product.id, quantity + 1)} className="flex h-7 w-7 items-center justify-center rounded-sm border border-border text-muted-foreground hover:text-foreground">
-                          <Plus className="h-3 w-3" />
-                        </button>
+                  return (
+                    <div key={product.id} className="flex gap-4 rounded-sm border border-border bg-card p-4">
+                      <Link to={`/product/${product.id}`} className="h-24 w-20 flex-shrink-0 overflow-hidden rounded-sm bg-secondary">
+                        {imageUrl ? (
+                          <img src={imageUrl} alt={product.name} className="h-full w-full object-cover" />
+                        ) : (
+                          <div className="h-full w-full flex items-center justify-center text-[10px] text-muted-foreground uppercase">{(product as any).category}</div>
+                        )}
+                      </Link>
+                      <div className="flex flex-1 flex-col">
+                        <p className="text-[10px] uppercase tracking-widest text-muted-foreground">{product.brand}</p>
+                        <Link to={`/product/${product.id}`} className="font-serif text-sm font-semibold text-foreground hover:text-primary">
+                          {product.name}
+                        </Link>
+                        <p className="mt-1 text-xs text-muted-foreground">{volume}</p>
+                        <div className="mt-auto flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <button onClick={() => updateQuantity(product.id, quantity - 1)} className="flex h-7 w-7 items-center justify-center rounded-sm border border-border text-muted-foreground hover:text-foreground">
+                              <Minus className="h-3 w-3" />
+                            </button>
+                            <span className="w-8 text-center text-sm font-medium text-foreground">{quantity}</span>
+                            <button onClick={() => updateQuantity(product.id, quantity + 1)} className="flex h-7 w-7 items-center justify-center rounded-sm border border-border text-muted-foreground hover:text-foreground">
+                              <Plus className="h-3 w-3" />
+                            </button>
+                          </div>
+                          <div className="flex items-center gap-4">
+                            <span className="font-sans text-sm font-bold text-foreground">${(price * quantity).toFixed(2)}</span>
+                            <button onClick={() => removeItem(product.id)} className="text-muted-foreground hover:text-destructive">
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                          </div>
+                        </div>
                       </div>
-                      <div className="flex items-center gap-4">
-                        <span className="font-sans text-sm font-bold text-foreground">${(price * quantity).toFixed(2)}</span>
-                        <button onClick={() => removeItem(product.id)} className="text-muted-foreground hover:text-destructive">
-                          <Trash2 className="h-4 w-4" />
-                        </button>
-                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+
+            {/* ── Step 2: Checkout Details ──────────────────────────────── */}
+            {step === "checkout" && customer && (
+              <div className="space-y-6">
+                {/* Customer info card */}
+                <div className="rounded-sm border border-border bg-card p-5">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Customer Information</h3>
+                    <button onClick={logout} className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-red-400 transition-colors">
+                      <LogOut className="h-3 w-3" /> Sign Out
+                    </button>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                      <User className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-foreground">{customer.first_name} {customer.last_name}</p>
+                      <p className="text-xs text-muted-foreground">{customer.email}</p>
+                      {customer.phone && <p className="text-xs text-muted-foreground">{customer.phone}</p>}
                     </div>
                   </div>
                 </div>
-              );
-            })}
+
+                {/* Delivery address (if delivery) */}
+                {fulfillment === "delivery" && (
+                  <div className="rounded-sm border border-border bg-card p-5">
+                    <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3">Delivery Address *</h3>
+                    <textarea
+                      value={checkout.delivery_address}
+                      onChange={(e) => setCheckout((c) => ({ ...c, delivery_address: e.target.value }))}
+                      rows={2}
+                      placeholder="Enter your full delivery address"
+                      required
+                      className="w-full rounded-sm border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary transition-colors resize-none"
+                    />
+                  </div>
+                )}
+
+                {/* Order notes */}
+                <div className="rounded-sm border border-border bg-card p-5">
+                  <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3">Order Notes (Optional)</h3>
+                  <textarea
+                    value={checkout.notes}
+                    onChange={(e) => setCheckout((c) => ({ ...c, notes: e.target.value }))}
+                    rows={2}
+                    placeholder="Any special instructions for your order..."
+                    className="w-full rounded-sm border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary transition-colors resize-none"
+                  />
+                </div>
+
+                {/* Order items summary */}
+                <div className="rounded-sm border border-border bg-card p-5">
+                  <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3">
+                    Items ({items.length})
+                  </h3>
+                  <div className="space-y-2">
+                    {items.map(({ product, quantity }) => (
+                      <div key={product.id} className="flex justify-between text-sm">
+                        <span className="text-muted-foreground truncate max-w-[230px]">{product.name} × {quantity}</span>
+                        <span className="text-foreground font-medium">${(parseFloat(String((product as any).price)) * quantity).toFixed(2)}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => setStep("cart")}
+                  className="text-sm text-primary hover:underline"
+                >
+                  ← Back to cart
+                </button>
+              </div>
+            )}
           </div>
 
-          {/* Summary */}
+          {/* ── Right: Order Summary ──────────────────────────────────── */}
           <div className="h-fit rounded-sm border border-border bg-card p-6">
             <h3 className="mb-5 font-serif text-lg font-bold text-foreground">Order Summary</h3>
 
-            {/* Store display */}
             {selectedStore && (
               <p className="mb-4 text-xs text-muted-foreground">
                 Store: <span className="font-semibold text-foreground">{selectedStore.name}</span>
@@ -176,23 +283,43 @@ export default function Cart() {
               <span>${total.toFixed(2)}</span>
             </div>
 
-            {/* Age confirm */}
-            <label className="mb-4 flex cursor-pointer items-start gap-3">
-              <input type="checkbox" checked={ageConfirmed} onChange={(e) => setAgeConfirmed(e.target.checked)} className="mt-0.5 h-4 w-4 accent-primary" />
-              <span className="text-xs leading-relaxed text-muted-foreground">
-                I confirm I am 21 years of age or older and agree to the terms of purchase.
-              </span>
-            </label>
+            {/* Show different buttons depending on step */}
+            {step === "cart" ? (
+              <button
+                onClick={proceedToCheckout}
+                className="w-full rounded-sm bg-primary py-4 text-sm font-semibold uppercase tracking-widest text-primary-foreground transition-colors hover:bg-primary/90 flex items-center justify-center gap-2"
+              >
+                {customer ? "Proceed to Checkout" : "Sign In to Checkout"}
+              </button>
+            ) : (
+              <>
+                {/* Age confirm */}
+                <label className="mb-4 flex cursor-pointer items-start gap-3">
+                  <input type="checkbox" checked={ageConfirmed} onChange={(e) => setAgeConfirmed(e.target.checked)} className="mt-0.5 h-4 w-4 accent-primary" />
+                  <span className="text-xs leading-relaxed text-muted-foreground">
+                    I confirm I am 21 years of age or older and agree to the terms of purchase.
+                  </span>
+                </label>
 
-            {error && <p className="mb-3 text-xs text-red-400">{error}</p>}
+                {error && <p className="mb-3 text-xs text-red-400">{error}</p>}
 
-            <button
-              onClick={placeOrder}
-              disabled={!ageConfirmed || placing}
-              className="w-full rounded-sm bg-primary py-4 text-sm font-semibold uppercase tracking-widest text-primary-foreground transition-colors hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-40 flex items-center justify-center gap-2"
-            >
-              {placing ? <><Loader2 className="h-4 w-4 animate-spin" /> Placing Order...</> : "Place Order"}
-            </button>
+                <button
+                  onClick={placeOrder}
+                  disabled={!ageConfirmed || placing}
+                  className="w-full rounded-sm bg-primary py-4 text-sm font-semibold uppercase tracking-widest text-primary-foreground transition-colors hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-40 flex items-center justify-center gap-2"
+                >
+                  {placing ? <><Loader2 className="h-4 w-4 animate-spin" /> Placing Order...</> : "Place Order"}
+                </button>
+              </>
+            )}
+
+            {/* Logged-in indicator */}
+            {customer && step === "cart" && (
+              <div className="mt-4 flex items-center gap-2 text-xs text-muted-foreground">
+                <User className="h-3 w-3" />
+                <span>Signed in as <span className="text-foreground font-medium">{customer.first_name} {customer.last_name}</span></span>
+              </div>
+            )}
           </div>
         </div>
       </div>

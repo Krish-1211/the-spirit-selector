@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { StoreProvider } from "@/context/StoreContext";
 import { CartProvider } from "@/context/CartContext";
 import { AdminAuthProvider, useAdminAuth } from "@/context/AdminAuthContext";
+import { CustomerAuthProvider } from "@/context/CustomerAuthContext";
 import Header from "@/components/Header";
 import StoreModal from "@/components/StoreModal";
 import AdminLayout from "@/components/admin/AdminLayout";
@@ -16,6 +17,7 @@ import Products from "./pages/Products";
 import ProductDetail from "./pages/ProductDetail";
 import Cart from "./pages/Cart";
 import NotFound from "./pages/NotFound";
+import CustomerAuthPage from "./pages/CustomerAuthPage";
 
 // Admin pages
 import AdminLoginPage from "./pages/admin/AdminLoginPage";
@@ -57,6 +59,7 @@ function PublicRoutes() {
         <Route path="/products" element={<Products />} />
         <Route path="/product/:id" element={<ProductDetail />} />
         <Route path="/cart" element={<Cart />} />
+        <Route path="/account" element={<CustomerAuthPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>
@@ -67,21 +70,23 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <AdminAuthProvider>
-        <StoreProvider>
-          <CartProvider>
-            <Toaster />
-            <Sonner />
-            <BrowserRouter>
-              <Routes>
-                {/* Admin section — fully isolated, no public header */}
-                <Route path="/admin/login" element={<AdminLoginPage />} />
-                <Route path="/admin/*" element={<AdminRoutes />} />
-                {/* Public storefront */}
-                <Route path="/*" element={<PublicRoutes />} />
-              </Routes>
-            </BrowserRouter>
-          </CartProvider>
-        </StoreProvider>
+        <CustomerAuthProvider>
+          <StoreProvider>
+            <CartProvider>
+              <Toaster />
+              <Sonner />
+              <BrowserRouter>
+                <Routes>
+                  {/* Admin section — fully isolated, no public header */}
+                  <Route path="/admin/login" element={<AdminLoginPage />} />
+                  <Route path="/admin/*" element={<AdminRoutes />} />
+                  {/* Public storefront */}
+                  <Route path="/*" element={<PublicRoutes />} />
+                </Routes>
+              </BrowserRouter>
+            </CartProvider>
+          </StoreProvider>
+        </CustomerAuthProvider>
       </AdminAuthProvider>
     </TooltipProvider>
   </QueryClientProvider>

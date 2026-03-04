@@ -9,7 +9,7 @@ const generateToken = (payload) =>
 
 // POST /api/auth/register (customer)
 const registerCustomer = async (req, res) => {
-    const { first_name, last_name, email, password, date_of_birth } = req.body;
+    const { first_name, last_name, email, password, date_of_birth, phone, address } = req.body;
     if (!first_name || !last_name || !email || !password) {
         return res.status(400).json({ error: "All fields are required" });
     }
@@ -20,9 +20,9 @@ const registerCustomer = async (req, res) => {
         }
         const password_hash = await bcrypt.hash(password, 12);
         const result = await query(
-            `INSERT INTO customers (first_name, last_name, email, password_hash, date_of_birth)
-       VALUES ($1, $2, $3, $4, $5) RETURNING id, email, first_name, last_name`,
-            [first_name, last_name, email, password_hash, date_of_birth || null]
+            `INSERT INTO customers (first_name, last_name, email, password_hash, date_of_birth, phone, address)
+       VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id, email, first_name, last_name, phone, address`,
+            [first_name, last_name, email, password_hash, date_of_birth || null, phone || null, address || null]
         );
         const user = result.rows[0];
         const token = generateToken({ id: user.id, email: user.email, role: "customer" });
