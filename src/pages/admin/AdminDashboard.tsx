@@ -57,10 +57,10 @@ export default function AdminDashboard() {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div className="bg-[#111] border border-white/5 rounded-lg p-4 sm:p-6 text-sm">
+                <div className="bg-[#111] border border-white/5 rounded-lg p-4 sm:p-6 text-sm flex flex-col">
                     <h2 className="text-xs sm:text-sm font-semibold uppercase tracking-widest text-gray-400 mb-4 text-left">Orders by Status</h2>
                     {stats?.orders_by_status?.length ? (
-                        <div className="space-y-3">
+                        <div className="space-y-3 flex-1">
                             {stats.orders_by_status.map((row: any) => (
                                 <div key={row.status} className="flex items-center justify-between">
                                     <span className={`px-2.5 py-1 rounded-full text-[10px] sm:text-xs font-medium capitalize ${statusColor[row.status] || "bg-gray-500/10 text-gray-400"}`}>{row.status}</span>
@@ -71,19 +71,19 @@ export default function AdminDashboard() {
                     ) : <p className="text-gray-600 text-sm">No orders yet</p>}
                 </div>
 
-                <div className="bg-[#111] border border-white/5 rounded-lg p-4 sm:p-6 text-sm">
+                <div className="bg-[#111] border border-white/5 rounded-lg p-4 sm:p-6 text-sm flex flex-col">
                     <h2 className="text-xs sm:text-sm font-semibold uppercase tracking-widest text-yellow-500/70 mb-4 flex items-center gap-2 text-left">
                         <AlertTriangle size={14} /> Low Stock Alerts
                     </h2>
                     {lowStock.length ? (
-                        <div className="space-y-3 max-h-64 overflow-auto scrollbar-hide">
+                        <div className="space-y-3 max-h-64 overflow-y-auto pr-2 flex-1 scrollbar-hide">
                             {lowStock.map((item: any) => (
                                 <div key={item.id} className="flex items-center justify-between text-xs sm:text-sm border-b border-white/5 pb-2">
-                                    <div className="pr-4">
-                                        <p className="text-white font-medium truncate max-w-[120px] sm:max-w-none">{item.product_name}</p>
-                                        <p className="text-gray-500 text-[10px] sm:text-xs">{item.store_name}</p>
+                                    <div className="pr-4 min-w-0">
+                                        <p className="text-white font-medium truncate">{item.product_name}</p>
+                                        <p className="text-gray-500 text-[10px] sm:text-xs truncate">{item.store_name}</p>
                                     </div>
-                                    <span className="text-yellow-400 font-bold whitespace-nowrap">{item.available_quantity} left</span>
+                                    <span className="text-yellow-400 font-bold whitespace-nowrap flex-shrink-0">{item.available_quantity} left</span>
                                 </div>
                             ))}
                         </div>
@@ -91,38 +91,36 @@ export default function AdminDashboard() {
                 </div>
             </div>
 
-            <div className="bg-[#111] border border-white/5 rounded-lg p-4 sm:p-6 overflow-hidden">
+            <div className="bg-[#111] border border-white/5 rounded-lg p-4 sm:p-6 overflow-hidden flex flex-col">
                 <h2 className="text-xs sm:text-sm font-semibold uppercase tracking-widest text-gray-400 mb-4 text-left">Recent Orders</h2>
                 {stats?.recent_orders?.length ? (
-                    <div className="overflow-x-auto -mx-4 sm:-mx-6">
-                        <div className="inline-block min-w-full align-middle px-4 sm:px-6">
-                            <table className="min-w-full text-sm">
-                                <thead>
-                                    <tr className="text-[10px] sm:text-xs uppercase tracking-widest text-gray-600 border-b border-white/5">
-                                        <th className="pb-3 text-left">Order #</th>
-                                        <th className="pb-3 text-left">Store</th>
-                                        <th className="pb-3 text-left">Total</th>
-                                        <th className="pb-3 text-left">Status</th>
-                                        <th className="pb-3 text-left">Date</th>
+                    <div className="overflow-x-auto -mx-4 sm:-mx-6 px-4 sm:px-6">
+                        <table className="w-full text-sm min-w-[600px]">
+                            <thead>
+                                <tr className="text-[10px] sm:text-xs uppercase tracking-widest text-gray-600 border-b border-white/5">
+                                    <th className="pb-3 pr-4 text-left whitespace-nowrap">Order #</th>
+                                    <th className="pb-3 px-4 text-left whitespace-nowrap">Store</th>
+                                    <th className="pb-3 px-4 text-left whitespace-nowrap">Total</th>
+                                    <th className="pb-3 px-4 text-left whitespace-nowrap">Status</th>
+                                    <th className="pb-3 pl-4 text-right whitespace-nowrap">Date</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-white/5">
+                                {stats.recent_orders.map((o: any) => (
+                                    <tr key={o.id} className="text-gray-300">
+                                        <td className="py-3 pr-4 font-mono text-white text-xs sm:text-sm whitespace-nowrap">#{o.order_number}</td>
+                                        <td className="py-3 px-4 text-gray-400 text-[10px] sm:text-xs max-w-[150px] truncate">{o.store_name}</td>
+                                        <td className="py-3 px-4 text-green-400 text-xs sm:text-sm font-medium whitespace-nowrap">${parseFloat(o.total).toFixed(2)}</td>
+                                        <td className="py-3 px-4 whitespace-nowrap">
+                                            <span className={`px-2 py-0.5 rounded text-[10px] sm:text-xs capitalize inline-block ${statusColor[o.status]}`}>
+                                                {o.status}
+                                            </span>
+                                        </td>
+                                        <td className="py-3 pl-4 text-gray-500 text-[10px] sm:text-xs whitespace-nowrap text-right">{new Date(o.created_at).toLocaleDateString()}</td>
                                     </tr>
-                                </thead>
-                                <tbody className="divide-y divide-white/5">
-                                    {stats.recent_orders.map((o: any) => (
-                                        <tr key={o.id} className="text-gray-300">
-                                            <td className="py-3 font-mono text-white text-xs sm:text-sm">#{o.order_number}</td>
-                                            <td className="py-3 text-gray-400 text-[10px] sm:text-xs max-w-[120px] truncate">{o.store_name}</td>
-                                            <td className="py-3 text-green-400 text-xs sm:text-sm font-medium">${parseFloat(o.total).toFixed(2)}</td>
-                                            <td className="py-3">
-                                                <span className={`px-2 py-0.5 rounded text-[10px] sm:text-xs capitalize flex-shrink-0 inline-block ${statusColor[o.status]}`}>
-                                                    {o.status}
-                                                </span>
-                                            </td>
-                                            <td className="py-3 text-gray-500 text-[10px] sm:text-xs whitespace-nowrap">{new Date(o.created_at).toLocaleDateString()}</td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
+                                ))}
+                            </tbody>
+                        </table>
                     </div>
                 ) : <p className="text-gray-600 text-sm">No recent orders</p>}
             </div>
