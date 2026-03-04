@@ -47,6 +47,9 @@ export default function PromoCarousel() {
         <section className="relative overflow-hidden bg-background">
             <Carousel
                 plugins={[plugin.current]}
+                opts={{
+                    loop: true,
+                }}
                 className="w-full"
                 onMouseEnter={plugin.current.stop}
                 onMouseLeave={plugin.current.reset}
