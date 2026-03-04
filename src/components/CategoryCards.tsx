@@ -11,7 +11,7 @@ const categories = [
   },
   {
     name: "Vodka",
-    image: "https://images.unsplash.com/photo-1613063017139-e6e15ae01fb5?w=600&h=800&fit=crop",
+    image: "/premium_vodka.png",
   },
   {
     name: "Beer",
