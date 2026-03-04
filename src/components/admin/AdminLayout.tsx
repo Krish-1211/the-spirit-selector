@@ -25,7 +25,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 <div className="px-6 py-5 border-b border-white/5">
                     <div className="flex items-center gap-2">
                         <Boxes size={18} className="text-[#8b1a1a]" />
-                        <span className="font-serif font-bold text-white text-base tracking-wide uppercase">KIM ADMIN</span>
+                        <span className="font-serif font-bold text-white text-base tracking-wide uppercase">RESERVE</span>
                     </div>
                     <p className="text-[10px] uppercase tracking-widest text-gray-600 mt-0.5">Inventory Management</p>
                 </div>
