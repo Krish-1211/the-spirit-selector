@@ -132,7 +132,6 @@ export default function ProductsPage() {
                                 { label: "SKU", key: "sku" },
                                 { label: "ABV (%)", key: "alcohol_percentage", type: "number" },
                                 { label: "Volume (ml)", key: "volume_ml", type: "number" },
-                                { label: "Image URL", key: "image_url" },
                             ].map(({ label, key, type = "text", required }) => (
                                 <div key={key}>
                                     <label className="block text-xs uppercase tracking-widest text-gray-500 mb-1.5">{label}</label>
@@ -146,6 +145,30 @@ export default function ProductsPage() {
                                     />
                                 </div>
                             ))}
+                            <div>
+                                <label className="block text-xs uppercase tracking-widest text-gray-500 mb-1.5">Product Image</label>
+                                {form.image_url && (
+                                    <img src={form.image_url} alt="Preview" className="h-16 w-16 object-cover rounded mb-3 border border-white/10 bg-white/5" />
+                                )}
+                                <div className="flex gap-2 items-center">
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={(e) => {
+                                            const file = e.target.files?.[0];
+                                            if (file) {
+                                                const reader = new FileReader();
+                                                reader.onload = (evt) => {
+                                                    setForm({ ...form, image_url: evt.target?.result as string });
+                                                };
+                                                reader.readAsDataURL(file);
+                                            }
+                                        }}
+                                        className="flex-1 w-full bg-[#1a1a1a] border border-white/10 rounded-md p-2 text-gray-400 text-sm focus:outline-none focus:border-[#8b1a1a] file:cursor-pointer file:mr-4 file:py-1.5 file:px-3 file:rounded file:border-0 file:text-xs file:font-medium file:bg-white/10 file:text-white hover:file:bg-white/20"
+                                    />
+                                </div>
+                                <p className="text-[10px] text-gray-500 mt-1.5">Upload a product image from your computer to preview and save.</p>
+                            </div>
                             <div>
                                 <label className="block text-xs uppercase tracking-widest text-gray-500 mb-1.5">Category</label>
                                 <select

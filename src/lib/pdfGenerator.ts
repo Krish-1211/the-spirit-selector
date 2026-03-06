@@ -54,7 +54,7 @@ export const generateInvoicePDF = (order: any, businessSettings: any) => {
         head: [["Product", "Qty", "Unit Price", "Total"]],
         body: tableData,
         theme: "striped",
-        headStyles: { fillGray: true, textColor: 255 },
+        headStyles: { fillColor: [128, 128, 128], textColor: 255 },
         styles: { fontSize: 9, cellPadding: 5 }
     });
 

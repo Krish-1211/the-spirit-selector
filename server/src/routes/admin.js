@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const { authenticate, adminOnly } = require("../middleware/auth");
-const { createProduct, updateProduct, deleteProduct, getAllProductsAdmin } = require("../controllers/productController");
+const { createProduct, updateProduct, deleteProduct, getAllProductsAdmin, bulkCreateProducts } = require("../controllers/productController");
 const { getOrders, getOrderById, updateOrderStatus, getDashboardStats } = require("../controllers/orderController");
 const { getAllStores, createStore, updateStore } = require("../controllers/storeController");
 const { getAllCustomers, getCustomerById, updateCustomer } = require("../controllers/customerController");
@@ -14,6 +14,7 @@ router.get("/dashboard", getDashboardStats);
 
 // Products
 router.get("/products", getAllProductsAdmin);
+router.post("/products/bulk", bulkCreateProducts);
 router.post("/products", createProduct);
 router.put("/products/:id", updateProduct);
 router.delete("/products/:id", deleteProduct);

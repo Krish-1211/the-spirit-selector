@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "@/lib/adminApi";
-import { AlertTriangle, Pencil, X } from "lucide-react";
+import { AlertTriangle, Pencil, X, Upload } from "lucide-react";
+import BulkImportModal from "@/components/admin/BulkImportModal";
 
 export default function InventoryPage() {
     const qc = useQueryClient();
     const [storeId, setStoreId] = useState("");
+    const [showBulkModal, setShowBulkModal] = useState(false);
     const [editing, setEditing] = useState<any>(null);
     const [form, setForm] = useState({ stock_quantity: 0, low_stock_threshold: 5 });
 
@@ -18,6 +20,11 @@ export default function InventoryPage() {
     const updateMutation = useMutation({
         mutationFn: ({ id, data }: any) => api.put(`/admin/inventory/${id}`, data),
         onSuccess: () => { qc.invalidateQueries({ queryKey: ["inventory"] }); setEditing(null); },
+    });
+
+    const bulkMutation = useMutation({
+        mutationFn: (data: any[]) => api.post("/admin/inventory/bulk", { store_id: storeId, inventory: data }),
+        onSuccess: () => { qc.invalidateQueries({ queryKey: ["inventory"] }); setShowBulkModal(false); },
     });
 
     const openEdit = (item: any) => {
@@ -39,14 +46,24 @@ export default function InventoryPage() {
                     <h1 className="text-xl sm:text-2xl font-serif font-bold text-white">Inventory</h1>
                     <p className="text-gray-500 text-xs sm:text-sm mt-0.5">Manage stock levels per store</p>
                 </div>
-                <select
-                    value={storeId}
-                    onChange={(e) => setStoreId(e.target.value)}
-                    className="w-full sm:w-auto bg-[#1a1a1a] border border-white/10 text-gray-300 text-xs sm:text-sm rounded-md px-4 py-2 focus:outline-none focus:border-[#8b1a1a]"
-                >
-                    <option value="">All Stores</option>
-                    {stores.map((s: any) => <option key={s.id} value={s.id}>{s.name}</option>)}
-                </select>
+                <div className="flex items-center gap-3 w-full sm:w-auto">
+                    {storeId && (
+                        <button
+                            onClick={() => setShowBulkModal(true)}
+                            className="flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors whitespace-nowrap"
+                        >
+                            <Upload size={16} /> Bulk Import
+                        </button>
+                    )}
+                    <select
+                        value={storeId}
+                        onChange={(e) => setStoreId(e.target.value)}
+                        className="w-full bg-[#1a1a1a] border border-white/10 text-gray-300 text-xs sm:text-sm rounded-md px-4 py-2 focus:outline-none focus:border-[#8b1a1a]"
+                    >
+                        <option value="">All Stores</option>
+                        {stores.map((s: any) => <option key={s.id} value={s.id}>{s.name}</option>)}
+                    </select>
+                </div>
             </div>
 
             {isLoading ? (
@@ -132,6 +149,15 @@ export default function InventoryPage() {
                         </div>
                     </div>
                 </div>
+            )}
+
+            {/* Bulk Import Modal */}
+            {showBulkModal && (
+                <BulkImportModal
+                    onClose={() => setShowBulkModal(false)}
+                    onImport={(data) => bulkMutation.mutate(data)}
+                    isPending={bulkMutation.isPending}
+                />
             )}
         </div>
     );

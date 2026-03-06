@@ -96,4 +96,59 @@ const addInventory = async (req, res) => {
     }
 };
 
-module.exports = { getInventory, getLowStock, updateInventory, addInventory };
+// POST /api/admin/inventory/bulk
+const bulkUpdateInventory = async (req, res) => {
+    const { store_id, inventory } = req.body;
+    if (!store_id) return res.status(400).json({ error: "store_id is required for bulk update" });
+    if (!Array.isArray(inventory) || inventory.length === 0) {
+        return res.status(400).json({ error: "an array of inventory items is required" });
+    }
+
+    try {
+        const productsRes = await query("SELECT id, sku, name FROM products");
+        const products = productsRes.rows;
+
+        const values = [];
+        let i = 1;
+        const placeholders = [];
+
+        for (const item of inventory) {
+            let product = null;
+            if (item.sku) product = products.find(p => p.sku === item.sku);
+            if (!product && item.name) {
+                const searchName = item.name.toLowerCase().trim();
+                product = products.find(p => p.name.toLowerCase().trim() === searchName);
+            }
+            if (!product) continue; // Skip items that don't match any product
+
+            placeholders.push(`($${i++}, $${i++}, $${i++}, $${i++})`);
+            values.push(
+                store_id,
+                product.id,
+                parseInt(item.stock_quantity) || 0,
+                parseInt(item.low_stock_threshold) || 5
+            );
+        }
+
+        if (values.length === 0) {
+            return res.status(400).json({ error: "No matching products found in the database. Ensure SKUs or Names precisely match." });
+        }
+
+        const queryStr = `
+            INSERT INTO store_inventory (store_id, product_id, stock_quantity, low_stock_threshold)
+            VALUES ${placeholders.join(', ')}
+            ON CONFLICT (store_id, product_id) DO UPDATE
+            SET stock_quantity = EXCLUDED.stock_quantity, 
+                low_stock_threshold = EXCLUDED.low_stock_threshold,
+                updated_at = NOW()
+        `;
+
+        const result = await query(queryStr, values);
+        res.status(200).json({ message: `Successfully updated ${placeholders.length} inventory records.` });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Failed to bulk update inventory" });
+    }
+};
+
+module.exports = { getInventory, getLowStock, updateInventory, addInventory, bulkUpdateInventory };

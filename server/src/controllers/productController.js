@@ -132,4 +132,39 @@ const getAllProductsAdmin = async (req, res) => {
     }
 };
 
-module.exports = { getProducts, getProductById, createProduct, updateProduct, deleteProduct, getAllProductsAdmin };
+// POST /api/admin/products/bulk
+const bulkCreateProducts = async (req, res) => {
+    const { products } = req.body;
+    if (!Array.isArray(products) || products.length === 0) {
+        return res.status(400).json({ error: "An array of products is required" });
+    }
+
+    try {
+        const values = [];
+        const placeholders = [];
+        let i = 1;
+
+        for (const p of products) {
+            placeholders.push(`($${i++}, $${i++}, $${i++}, $${i++}, $${i++}, $${i++}, $${i++}, $${i++}, $${i++}, $${i++})`);
+            values.push(
+                p.name || '', p.brand || '', p.category || 'Other',
+                p.alcohol_percentage || null, p.volume_ml || null, p.sku || '',
+                p.price || 0, p.description || '', p.tasting_notes || '', p.image_url || ''
+            );
+        }
+
+        const queryStr = `
+            INSERT INTO products (name, brand, category, alcohol_percentage, volume_ml, sku, price, description, tasting_notes, image_url)
+            VALUES ${placeholders.join(', ')}
+            RETURNING *
+        `;
+
+        const result = await query(queryStr, values);
+        res.status(201).json({ message: `Successfully inserted ${result.rowCount} products`, count: result.rowCount });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Failed to bulk create products" });
+    }
+};
+
+module.exports = { getProducts, getProductById, createProduct, updateProduct, deleteProduct, getAllProductsAdmin, bulkCreateProducts };
