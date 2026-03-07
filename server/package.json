@@ -1,7 +1,7 @@
 {
     "name": "reserve-spirits-server",
     "version": "1.0.0",
-    "description": "Backend API for Reserve Spirits multi-store liquor platform",
+    "description": "Backend API for Company multi-store liquor platform",
     "main": "src/index.js",
     "scripts": {
         "start": "node src/index.js",

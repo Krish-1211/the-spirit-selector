@@ -32,7 +32,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <header className="lg:hidden fixed top-0 left-0 right-0 h-14 bg-[#111] border-b border-white/5 flex items-center justify-between px-4 z-40">
                 <div className="flex items-center gap-2">
                     <Boxes size={18} className="text-[#8b1a1a]" />
-                    <span className="font-serif font-bold text-white text-base tracking-wide uppercase">RESERVE</span>
+                    <span className="font-serif font-bold text-white text-base tracking-wide uppercase">COMPANY</span>
                 </div>
                 <button
                     onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -58,7 +58,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 <div className="px-6 py-5 border-b border-white/5 hidden lg:block">
                     <div className="flex items-center gap-2">
                         <Boxes size={18} className="text-[#8b1a1a]" />
-                        <span className="font-serif font-bold text-white text-base tracking-wide uppercase">RESERVE</span>
+                        <span className="font-serif font-bold text-white text-base tracking-wide uppercase">COMPANY</span>
                     </div>
                     <p className="text-[10px] uppercase tracking-widest text-gray-600 mt-0.5">Inventory Management</p>
                 </div>
@@ -67,7 +67,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 <div className="px-6 py-5 border-b border-white/5 lg:hidden flex justify-between items-center">
                     <div className="flex items-center gap-2">
                         <Boxes size={18} className="text-[#8b1a1a]" />
-                        <span className="font-serif font-bold text-white text-base tracking-wide uppercase">RESERVE</span>
+                        <span className="font-serif font-bold text-white text-base tracking-wide uppercase">COMPANY</span>
                     </div>
                 </div>
 

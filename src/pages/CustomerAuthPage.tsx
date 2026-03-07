@@ -58,7 +58,7 @@ export default function CustomerAuthPage() {
                         {isLogin ? "Welcome Back" : "Create Account"}
                     </h1>
                     <p className="text-sm text-muted-foreground mt-1">
-                        {isLogin ? "Sign in to your account to continue" : "Join Reserve Spirits for a premium shopping experience"}
+                        {isLogin ? "Sign in to your account to continue" : "Join Company for a premium shopping experience"}
                     </p>
                 </div>
 
@@ -72,8 +72,8 @@ export default function CustomerAuthPage() {
                             key={label}
                             onClick={() => { setIsLogin(val); setError(""); }}
                             className={`flex-1 py-2.5 text-xs font-semibold uppercase tracking-wider rounded-sm transition-colors ${isLogin === val
-                                    ? "bg-primary text-primary-foreground"
-                                    : "text-muted-foreground hover:text-foreground"
+                                ? "bg-primary text-primary-foreground"
+                                : "text-muted-foreground hover:text-foreground"
                                 }`}
                         >
                             {label}

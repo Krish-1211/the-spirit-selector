@@ -18,7 +18,7 @@ const features = [
     },
     {
         icon: Award,
-        title: "Reserve Guarantee",
+        title: "Company Guarantee",
         description: "We stand by the quality of every drop. If you're not satisfied, we'll make it right."
     }
 ];
@@ -54,7 +54,7 @@ export default function InfoSection() {
                             Elevating the Art of Fine Spirits
                         </h2>
                         <p className="mb-6 text-lg text-muted-foreground leading-relaxed">
-                            At Reserve, we believe that choosing a spirit is more than just a purchase—it's the beginning of an experience. Our mission is to bridge the gap between world-class distilleries and your private collection.
+                            At Company, we believe that choosing a spirit is more than just a purchase—it's the beginning of an experience. Our mission is to bridge the gap between world-class distilleries and your private collection.
                         </p>
                         <p className="text-muted-foreground leading-relaxed">
                             Whether you're looking for a rare vintage scotch to celebrate a milestone or a perfectly balanced gin for your weekend garden party, our team of experts is here to guide you through our meticulously curated cellar.

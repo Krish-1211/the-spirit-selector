@@ -1,5 +1,5 @@
 -- ============================================================
--- Reserve Spirits – Supabase SQL Schema
+-- Company – Supabase SQL Schema
 -- Run this in the Supabase SQL Editor
 -- ============================================================
 
@@ -133,10 +133,10 @@ CREATE INDEX IF NOT EXISTS idx_order_items_order ON order_items(order_id);
 -- SEED: Default Stores
 -- ========================
 INSERT INTO stores (id, name, address, city, state, zip_code, phone) VALUES
-  ('a1000000-0000-0000-0000-000000000001', 'Reserve Spirits – Midtown Sacramento', '1234 J Street', 'Sacramento', 'CA', '95814', '(916) 555-0101'),
-  ('a1000000-0000-0000-0000-000000000002', 'Reserve Spirits – East Sacramento', '5678 Folsom Blvd', 'Sacramento', 'CA', '95819', '(916) 555-0102'),
-  ('a1000000-0000-0000-0000-000000000003', 'Reserve Spirits – San Francisco', '910 Market Street', 'San Francisco', 'CA', '94102', '(415) 555-0103'),
-  ('a1000000-0000-0000-0000-000000000004', 'Reserve Spirits – Los Angeles', '1122 Sunset Blvd', 'Los Angeles', 'CA', '90028', '(323) 555-0104')
+  ('a1000000-0000-0000-0000-000000000001', 'Company – Midtown Sacramento', '1234 J Street', 'Sacramento', 'CA', '95814', '(916) 555-0101'),
+  ('a1000000-0000-0000-0000-000000000002', 'Company – East Sacramento', '5678 Folsom Blvd', 'Sacramento', 'CA', '95819', '(916) 555-0102'),
+  ('a1000000-0000-0000-0000-000000000003', 'Company – San Francisco', '910 Market Street', 'San Francisco', 'CA', '94102', '(415) 555-0103'),
+  ('a1000000-0000-0000-0000-000000000004', 'Company – Los Angeles', '1122 Sunset Blvd', 'Los Angeles', 'CA', '90028', '(323) 555-0104')
 ON CONFLICT DO NOTHING;
 
 -- ========================

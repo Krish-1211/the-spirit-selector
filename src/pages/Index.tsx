@@ -24,9 +24,9 @@ const Index = () => {
 
       <footer className="border-t border-border bg-card py-16">
         <div className="container text-center">
-          <p className="font-serif text-3xl font-bold tracking-widest text-foreground">
-            RESERVE<span className="text-primary">.</span>
-          </p>
+          <h2 className="font-serif text-2xl font-bold tracking-widest text-foreground">
+            COMPANY<span className="text-primary">.</span>
+          </h2>
           <div className="mt-8 flex justify-center gap-8 text-sm text-muted-foreground uppercase tracking-widest font-semibold">
             <a href="#" className="hover:text-primary transition-colors">Our Story</a>
             <a href="#" className="hover:text-primary transition-colors">Locations</a>
@@ -36,8 +36,8 @@ const Index = () => {
           <p className="mt-12 text-xs text-muted-foreground max-w-md mx-auto leading-relaxed">
             Must be 21+ to purchase. Please drink responsibly. Government Warning: (1) According to the Surgeon General, women should not drink alcoholic beverages during pregnancy because of the risk of birth defects. (2) Consumption of alcoholic beverages impairs your ability to drive a car or operate machinery, and may cause health problems.
           </p>
-          <p className="mt-8 text-[10px] text-muted-foreground/50 uppercase tracking-tighter">
-            © 2026 Reserve Premium Spirits. All Rights Reserved.
+          <p className="text-sm font-medium tracking-wide">
+            © 2026 Company. All Rights Reserved.
           </p>
           <a
             href="/admin"

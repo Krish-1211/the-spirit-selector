@@ -12,7 +12,7 @@ export interface Store {
 export const stores: Store[] = [
   {
     id: "sac-1",
-    name: "Reserve Spirits – Midtown",
+    name: "Company – Midtown",
     address: "1420 R Street",
     city: "Sacramento",
     state: "CA",
@@ -22,7 +22,7 @@ export const stores: Store[] = [
   },
   {
     id: "sac-2",
-    name: "Reserve Spirits – East Sac",
+    name: "Company – East Sac",
     address: "5510 Folsom Blvd",
     city: "Sacramento",
     state: "CA",
@@ -32,7 +32,7 @@ export const stores: Store[] = [
   },
   {
     id: "sf-1",
-    name: "Reserve Spirits – Mission",
+    name: "Company – Mission",
     address: "2200 Mission St",
     city: "San Francisco",
     state: "CA",
@@ -42,7 +42,7 @@ export const stores: Store[] = [
   },
   {
     id: "la-1",
-    name: "Reserve Spirits – Silver Lake",
+    name: "Company – Silver Lake",
     address: "3401 Sunset Blvd",
     city: "Los Angeles",
     state: "CA",

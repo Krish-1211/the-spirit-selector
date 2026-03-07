@@ -37,7 +37,7 @@ export default function AgeVerificationModal() {
                     {/* Logo Section */}
                     <div className="flex flex-col items-center space-y-2">
                         <h1 className="font-serif text-3xl font-bold tracking-widest text-foreground">
-                            RESERVE<span className="text-primary">.</span>
+                            COMPANY<span className="text-primary">.</span>
                         </h1>
                         <div className="h-0.5 w-12 bg-primary/30" />
                         <Martini className="h-8 w-8 text-primary/80 opacity-50" />

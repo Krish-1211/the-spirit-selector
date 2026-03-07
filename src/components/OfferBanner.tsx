@@ -12,7 +12,7 @@ export default function OfferBanner() {
                         Limited Time Offer
                     </span>
                     <h2 className="mb-6 font-serif text-3xl font-bold text-foreground md:text-5xl">
-                        Join the Reserve Elite Rewards Club
+                        Join the Company Elite Rewards Club
                     </h2>
                     <p className="mb-10 text-lg text-muted-foreground">
                         Get early access to rare bottle drops, free shipping on all orders, and exclusive

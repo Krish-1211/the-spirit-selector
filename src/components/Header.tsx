@@ -26,7 +26,7 @@ export default function Header() {
         {/* Logo */}
         <Link to="/" className="flex-shrink-0">
           <h1 className="font-serif text-xl font-bold tracking-wide text-foreground lg:text-2xl">
-            RESERVE<span className="text-primary">.</span>
+            COMPANY<span className="text-primary">.</span>
           </h1>
         </Link>
 

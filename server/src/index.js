@@ -55,6 +55,6 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
-    console.log(`\n🚀 Reserve Spirits API running on http://localhost:${PORT}`);
+    console.log(`\n🚀 Company API running on http://localhost:${PORT}`);
     console.log(`📦 Environment: ${process.env.NODE_ENV}`);
 });

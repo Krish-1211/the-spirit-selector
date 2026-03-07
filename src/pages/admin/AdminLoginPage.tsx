@@ -28,7 +28,7 @@ export default function AdminLoginPage() {
         <div className="min-h-screen flex items-center justify-center bg-[#0a0a0a]">
             <div className="w-full max-w-sm">
                 <div className="text-center mb-8">
-                    <h1 className="text-3xl font-serif font-bold text-white tracking-wide">RESERVE</h1>
+                    <h1 className="text-3xl font-serif font-bold text-white tracking-wide">COMPANY</h1>
                     <p className="text-xs uppercase tracking-widest text-gray-500 mt-1">Admin Panel</p>
                 </div>
                 <form onSubmit={handleSubmit} className="bg-[#111] border border-white/10 rounded-lg p-8 space-y-5 shadow-2xl">
@@ -56,7 +56,7 @@ export default function AdminLoginPage() {
                     >
                         {loading ? "Signing In..." : "Sign In"}
                     </button>
-                    <p className="text-center text-xs text-gray-600">admin@reservespirits.com / Admin1234!</p>
+                    <p className="text-center text-xs text-gray-600">admin@company.com / Admin1234!</p>
                 </form>
             </div>
         </div>
