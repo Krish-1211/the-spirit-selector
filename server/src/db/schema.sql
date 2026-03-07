@@ -144,7 +144,7 @@ ON CONFLICT DO NOTHING;
 -- Password: Admin1234! (bcrypt hash)
 -- ========================
 INSERT INTO admins (email, password_hash, first_name, last_name, role) VALUES
-  ('admin@reservespirits.com', '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8v2q8N0PVjM5u9a6t6O', 'Reserve', 'Admin', 'superadmin')
+  ('admin@company.com', '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8v2q8N0PVjM5u9a6t6O', 'Company', 'Admin', 'superadmin')
 ON CONFLICT DO NOTHING;
 -- ========================
 -- SETTINGS

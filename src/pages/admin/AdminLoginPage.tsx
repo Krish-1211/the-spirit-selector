@@ -5,7 +5,7 @@ import { useAdminAuth } from "@/context/AdminAuthContext";
 export default function AdminLoginPage() {
     const { login } = useAdminAuth();
     const navigate = useNavigate();
-    const [email, setEmail] = useState("admin@reservespirits.com");
+    const [email, setEmail] = useState("admin@company.com");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
