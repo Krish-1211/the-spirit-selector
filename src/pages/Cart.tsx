@@ -5,6 +5,7 @@ import { useCart } from "@/context/CartContext";
 import { useStore } from "@/context/StoreContext";
 import { useCustomerAuth } from "@/context/CustomerAuthContext";
 import { api } from "@/lib/api";
+import ProductRecommendations from "@/components/ProductRecommendations";
 
 export default function Cart() {
   const { items, updateQuantity, removeItem, subtotal, clearCart } = useCart();
@@ -322,6 +323,11 @@ export default function Cart() {
             )}
           </div>
         </div>
+
+        {/* Product Recommendations based on the first item in cart */}
+        {items.length > 0 && step === "cart" && (
+          <ProductRecommendations productId={items[0].product.id} />
+        )}
       </div>
     </main>
   );

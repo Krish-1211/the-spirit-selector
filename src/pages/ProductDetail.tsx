@@ -4,6 +4,7 @@ import { api, DBProduct } from "@/lib/api";
 import { useCart } from "@/context/CartContext";
 import { useStore } from "@/context/StoreContext";
 import { ArrowLeft, Loader2 } from "lucide-react";
+import ProductRecommendations from "@/components/ProductRecommendations";
 
 export default function ProductDetail() {
   const { id } = useParams<{ id: string }>();
@@ -114,6 +115,9 @@ export default function ProductDetail() {
             </button>
           </div>
         </div>
+
+        {/* Product Recommendations */}
+        <ProductRecommendations productId={product.id} />
       </div>
     </main>
   );
