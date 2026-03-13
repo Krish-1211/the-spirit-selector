@@ -5,6 +5,8 @@ const { getOrders, getOrderById, updateOrderStatus, getDashboardStats } = requir
 const { getAllStores, createStore, updateStore } = require("../controllers/storeController");
 const { getAllCustomers, getCustomerById, updateCustomer } = require("../controllers/customerController");
 const { getSettings, updateSettings } = require("../controllers/settingsController");
+const { getVendors, createVendor } = require("../controllers/vendorController");
+const { getPurchaseOrders, getPurchaseOrderById, createPurchaseOrder, updatePOStatus } = require("../controllers/purchaseOrderController");
 
 // All admin routes require authentication + admin role
 router.use(authenticate, adminOnly);
@@ -37,5 +39,15 @@ router.put("/settings", updateSettings);
 router.get("/stores", getAllStores);
 router.post("/stores", createStore);
 router.put("/stores/:id", updateStore);
+
+// Vendors
+router.get("/vendors", getVendors);
+router.post("/vendors", createVendor);
+
+// Purchase Orders
+router.get("/purchase-orders", getPurchaseOrders);
+router.get("/purchase-orders/:id", getPurchaseOrderById);
+router.post("/purchase-orders", createPurchaseOrder);
+router.put("/purchase-orders/:id/status", updatePOStatus);
 
 module.exports = router;

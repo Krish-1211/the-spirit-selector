@@ -8,6 +8,7 @@ const navItems = [
     { to: "/admin/products", icon: Package, label: "Products" },
     { to: "/admin/inventory", icon: Warehouse, label: "Inventory" },
     { to: "/admin/orders", icon: ShoppingBag, label: "Orders" },
+    { to: "/admin/purchase-orders", icon: FileText, label: "Purchase Orders" },
     { to: "/admin/invoices", icon: FileText, label: "Invoices" },
     { to: "/admin/clients", icon: Users, label: "Clients" },
     { to: "/admin/settings", icon: Settings, label: "Settings" },

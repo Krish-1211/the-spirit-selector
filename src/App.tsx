@@ -28,6 +28,7 @@ import AdminProductsPage from "./pages/admin/AdminProductsPage";
 import AdminInventoryPage from "./pages/admin/AdminInventoryPage";
 import AdminOrdersPage from "./pages/admin/AdminOrdersPage";
 import AdminInvoicesPage from "./pages/admin/AdminInvoicesPage";
+import AdminPurchaseOrdersPage from "./pages/admin/AdminPurchaseOrdersPage";
 import AdminClientsPage from "./pages/admin/AdminClientsPage";
 import AdminSettingsPage from "./pages/admin/AdminSettingsPage";
 
@@ -47,7 +48,9 @@ function AdminRoutes() {
         <Route path="/products" element={<AdminProductsPage />} />
         <Route path="/inventory" element={<AdminInventoryPage />} />
         <Route path="/orders" element={<AdminOrdersPage />} />
+        <Route path="/purchase-orders" element={<AdminPurchaseOrdersPage />} />
         <Route path="/invoices" element={<AdminInvoicesPage />} />
+
         <Route path="/clients" element={<AdminClientsPage />} />
         <Route path="/settings" element={<AdminSettingsPage />} />
         <Route path="*" element={<Navigate to="/admin" replace />} />
